@@ -1,17 +1,18 @@
 {
-    "Authenticate.keystone": [
+    "CeilometerResource.list_resources": [
         {
             "runner": {
                 "type": "constant",
                 "times": 10,
-                "concurrency": 5
+                "concurrency": 1
             },
             "context": {
                 "users": {
-                    "tenants": 3,
-                    "users_per_tenant": 5
+                    "tenants": 2,
+                    "users_per_tenant": 2
                 }
             }
         }
     ]
 }
+
