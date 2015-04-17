@@ -1,15 +1,15 @@
 {
-    "Authenticate.keystone": [
+    "NovaKeypair.create_and_delete_keypair": [
         {
             "runner": {
                 "type": "constant",
                 "times": 10,
-                "concurrency": 5
+                "concurrency": 2
             },
             "context": {
                 "users": {
                     "tenants": 3,
-                    "users_per_tenant": 5
+                    "users_per_tenant": 2
                 }
             }
         }
