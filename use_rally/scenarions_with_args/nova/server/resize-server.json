@@ -1,22 +1,23 @@
 {
-    "NovaServers.boot_and_delete_server": [
+    "NovaServers.resize_server": [
         {
             "args": {
                 "flavor": {
-                    "name": "m1.tiny"
+                    "name": "m1.nano"
                 },
                 "image": {
-                    "name": "cirros-0.3.4-x86_64"
+                    "name": "^cirros.*uec$"
                 },
-                "force_delete": false,
-                "min_sleep": 5,
-                "max_sleep": 20
+                "to_flavor": {
+                    "name": "m1.small"
+                },
+                "confirm": true,
                 "force_delete": false
             },
             "runner": {
                 "type": "constant",
                 "times": 10,
-                "concurrency": 2
+                "concurrency": 5
             },
             "context": {
                 "users": {
@@ -27,3 +28,4 @@
         }
     ]
 }
+
