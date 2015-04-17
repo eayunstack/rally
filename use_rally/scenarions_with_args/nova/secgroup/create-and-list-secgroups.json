@@ -1,15 +1,19 @@
 {
-    "Authenticate.keystone": [
+    "NovaSecGroup.create_and_list_secgroups": [
         {
+            "args": {
+                "security_group_count": 10,
+                "rules_per_security_group": 10
+            },
             "runner": {
                 "type": "constant",
                 "times": 10,
-                "concurrency": 5
+                "concurrency": 2
             },
             "context": {
                 "users": {
                     "tenants": 3,
-                    "users_per_tenant": 5
+                    "users_per_tenant": 2
                 }
             }
         }
