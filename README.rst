@@ -8,7 +8,7 @@ Rally
 
 Rally 是 OpenStack 的一个基准测试即服务的项目。
 
-Rally 的目的在于向社区提供一个能够在真实的部署环境上执行**特定的**、**复杂的**且**可重复的**测试用例的基准测试工具。
+Rally 的目的在于向社区提供一个能够在真实的部署环境上执行 **特定的** 、 **复杂的** 且 **可重复的** 测试用例的基准测试工具。
 
 如果您看到了篇文章，想必您对 OpenStack 应该很熟悉，并且知道它是一个相当庞大的各种服务相互协作的生态系统。当出现了失败、性能低下或不能够进行扩展时，是很难对所发生的各种问题回答“发生了什么“、”为什么发生了这个问题“以及”在哪里发生了问题“的。另一个您会看到这里的原因可能是您想要构建一个 OpenStack CI/CD 系统，让您能够持续增强 OpenStack 的 SLA、性能和稳定性。
 
@@ -23,7 +23,7 @@ OpenStack 的 QA 团队大多在为 CI/CD 系统工作着，为了确保新的 p
 文档
 =============
 
-`Rally 文档放在 ReadTheDocs <http://rally.readthedocs.org/en/latest/>上`_ ，是一个学习 Rally 相关内容的非常不错的文档。它提供了该基准测试工具的一个**简单**且具有**解说性**的指南。例如，请阅读 `Rally step-by-step tutorial <http://rally.readthedocs.org/en/latest/tutorial.html>`_ ，其中的很多小节，说明了如何探讨 Rally 在测试 OpenStack clouds 中的强大力量。
+`Rally 文档放在 ReadTheDocs <http://rally.readthedocs.org/en/latest/> 上`_ ，是一个学习 Rally 相关内容的非常不错的文档。它提供了该基准测试工具的一个 **简单** 且具有 **解说性** 的指南。例如，请阅读 `Rally step-by-step tutorial <http://rally.readthedocs.org/en/latest/tutorial.html>`_ ，其中的很多小节，说明了如何探讨 Rally 在测试 OpenStack clouds 中的强大力量。
 
 
 架构
@@ -32,7 +32,7 @@ OpenStack 的 QA 团队大多在为 CI/CD 系统工作着，为了确保新的 p
 架构方面，Rally 由 4 个组要组件构成：
 
 1. **Server Providers** - 提供服务器 (虚拟服务器)，用 ssh 访问，在一个 L3 网络中。
-2. **Deploy Engines** - 在由 ***Server Providers*** 提供的服务器上部署 OpenStack 云。
+2. **Deploy Engines** - 在由 **Server Providers** 提供的服务器上部署 OpenStack 云。
 3. **Verification** - 针对一个部署好的云环境运行 tempest (或其他特定测试) 的组件，收集结果并以人们能够解读的方式展现出来。
 4. **Benchmark engine** - 可以写一些参数化的标准测试场景并在云环境上运行。
 
