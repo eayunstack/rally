@@ -1,25 +1,26 @@
 {
-    "NovaServers.boot_server_from_volume_and_delete": [
+   "NovaServers.boot_and_rebuild_server": [
         {
             "args": {
                 "flavor": {
                     "name": "m1.nano"
                 },
-                "image": {
-                    "name": "^cirros.*uec$"
+                "from_image": {
+                    "name": "cirros-0.3.1-x86_64-uec"
                 },
-                "volume_size": 10,
-                "force_delete": false
+                "to_image": {
+                    "name": "cirros-0.3.2-x86_64-uec"
+                }
             },
             "runner": {
                 "type": "constant",
-                "times": 10,
+                "times": 5,
                 "concurrency": 2
             },
             "context": {
                 "users": {
-                    "tenants": 3,
-                    "users_per_tenant": 2
+                    "tenants": 1,
+                    "users_per_tenant": 1
                 }
             }
         }
