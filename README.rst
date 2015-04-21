@@ -32,7 +32,11 @@ OpenStack 的 QA 团队大多在为 CI/CD 系统工作着，为了确保新的 p
 架构方面，Rally 由 4 个组要组件构成：
 
 1. **Server Providers** - 提供服务器 (虚拟服务器)，用 ssh 访问，在一个 L3 网络中。
+<<<<<<< HEAD
 2. **Deploy Engines** - 在由 **Server Providers** 提供的服务器上部署 OpenStack 云。
+=======
+2. **Deploy Engines** - 在由 ***Server Providers*** 提供的服务器上部署 OpenStack 云。
+>>>>>>> 4844cd97c09d4d4ca13e6f73ef780a339eabc354
 3. **Verification** - 针对一个部署好的云环境运行 tempest (或其他特定测试) 的组件，收集结果并以人们能够解读的方式展现出来。
 4. **Benchmark engine** - 可以写一些参数化的标准测试场景并在云环境上运行。
 
