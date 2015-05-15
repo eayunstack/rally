@@ -7,7 +7,7 @@
             },
             "runner": {
                 "type": "constant",
-                "times": 2,
+                "times": 20,
                 "concurrency": 2
             },
             "context": {
