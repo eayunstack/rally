@@ -2,11 +2,11 @@
   CinderVolumes.create_and_list_snapshots:
     -
       args:
-        force: False
+        force: True
         detailed: True
       runner:
         type: "constant"
-        times: 2
+        times: 20
         concurrency: 2
       context:
         users:
