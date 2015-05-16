@@ -6,19 +6,19 @@
               min: 1
               max: 5
           nested_level:
-              min: 5
-              max: 10
+              min: 1
+              max: 1
       runner:
         type: "constant"
         times: 1
         concurrency: 1
       context:
         users:
-          tenants: 2
+          tenants: 1
           users_per_tenant: 1
         servers:
           image:
-            name: "^cirros.*uec$"
+            name: "TestVM"
           flavor:
             name: "m1.tiny"
-          servers_per_tenant: 2
+          servers_per_tenant: 1

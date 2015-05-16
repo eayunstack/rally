@@ -1,12 +1,9 @@
 ---
-  CinderVolumes.create_and_attach_volume:
+  CinderVolumes.create_and_extend_volume:
     -
       args:
-          size: 10
-          image:
-            name: "TestVM"
-          flavor:
-            name: "m1.tiny"
+        size: 1
+        new_size: 5
       runner:
         type: "constant"
         times: 5
