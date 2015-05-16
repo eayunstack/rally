@@ -1,15 +1,14 @@
 ---
-  CinderVolumes.create_from_volume_and_delete_volume:
+  CinderVolumes.create_volume:
     -
       args:
         size: 1
+        volume_type: "rbd"
       runner:
         type: "constant"
-        times: 2
+        times: 5
         concurrency: 2
       context:
         users:
           tenants: 1
           users_per_tenant: 1
-        volumes:
-          size: 1

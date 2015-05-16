@@ -15,7 +15,7 @@
                     "users_per_tenant": 1
                 },
                 "volumes": {
-                    "size": 1
+                    "size": 5
                 }
             }
         }
