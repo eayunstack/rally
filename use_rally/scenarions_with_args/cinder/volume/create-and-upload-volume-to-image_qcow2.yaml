@@ -1,12 +1,12 @@
 ---
-  CinderVolumes.create_and_attach_volume:
+  CinderVolumes.create_and_upload_volume_to_image:
     -
       args:
-          size: 10
-          image:
-            name: "TestVM"
-          flavor:
-            name: "m1.tiny"
+        size: 1
+        force: false
+        container_format: "bare"
+        disk_format: "qcow2"
+        do_delete: true
       runner:
         type: "constant"
         times: 5

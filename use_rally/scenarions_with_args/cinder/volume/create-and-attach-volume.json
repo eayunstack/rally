@@ -4,10 +4,10 @@
             "args": {
                 "size": 10,
                 "image": {
-                    "name": "^cirros.*uec$"
+                    "name": "TestVM"
                 },
                 "flavor": {
-                    "name": "m1.nano"
+                    "name": "m1.tiny"
                 }
             },
             "runner": {
@@ -17,8 +17,8 @@
             },
             "context": {
                 "users": {
-                    "tenants": 2,
-                    "users_per_tenant": 2
+                    "tenants": 1,
+                    "users_per_tenant": 1
                 }
             }
         }
