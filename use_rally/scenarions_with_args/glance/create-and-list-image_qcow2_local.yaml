@@ -1,0 +1,15 @@
+---
+  GlanceImages.create_and_list_image:
+    -
+      args:
+        image_location: "/root/images/cirros-0.3.4-x86_64.img"
+        container_format: "bare"
+        disk_format: "qcow2"
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 1
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
