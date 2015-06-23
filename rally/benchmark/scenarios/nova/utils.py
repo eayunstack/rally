@@ -84,7 +84,9 @@ class NovaScenario(base.Scenario):
 
     @base.atomic_action_timer("nova.boot_server")
     def _boot_server(self, image_id, flavor_id,
-                     auto_assign_nic=False, name=None, **kwargs):
+                     auto_assign_nic=False, name=None, key_name=None, **kwargs):
+#    def _boot_server(self, image_id, flavor_id,
+#                     auto_assign_nic=False, name=None, **kwargs):
         """Boot a server.
 
         Returns when the server is actually booted and in "ACTIVE" state.
@@ -118,6 +120,13 @@ class NovaScenario(base.Scenario):
                      % self.context["config"]["users"]["tenants"]),
                     len(nets))[1]
                 kwargs["nics"] = [{"net-id": nets[net_idx]}]
+
+        # add by coffee: if use keypair to ssh
+        if key_name:
+            if "key_name" not in kwargs:
+                kwargs["key_name"] = key_name
+            elif key_name not in kwargs["key_name"]:
+                kwargs["key_name"].append(key_name)
 
         server = self.clients("nova").servers.create(
             server_name, image_id, flavor_id, **kwargs)

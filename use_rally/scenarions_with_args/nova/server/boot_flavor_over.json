@@ -1,14 +1,18 @@
 {
-    "NovaSecGroup.create_and_delete_secgroups": [
+    "NovaServers.boot_server": [
         {
             "args": {
-                "security_group_count": 2,
-                "rules_per_security_group": 10
+                "flavor": {
+                    "name": "m1.over"
+                },
+                "image": {
+                    "name": "cirros-0.3.4-x86_64"
+                },
             },
             "runner": {
                 "type": "constant",
-                "times": 10,
-                "concurrency": 2
+                "times": 20,
+                "concurrency": 1
             },
             "context": {
                 "users": {

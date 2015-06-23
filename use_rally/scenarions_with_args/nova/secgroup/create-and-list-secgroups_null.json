@@ -1,9 +1,9 @@
 {
-    "NovaSecGroup.create_and_delete_secgroups": [
+    "NovaSecGroup.create_and_list_secgroups": [
         {
             "args": {
                 "security_group_count": 2,
-                "rules_per_security_group": 10
+                "rules_per_security_group": 0
             },
             "runner": {
                 "type": "constant",

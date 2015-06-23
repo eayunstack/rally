@@ -3,9 +3,9 @@
     -
       args:
         flavor:
-            name: "m1.nano"
+            name: "m1.tiny"
         image:
-            name: "^cirros.*uec$"
+            name: "cirros-0.3.4-x86_64"
         to_flavor:
             name: "m1.small"
         confirm: true

@@ -3,9 +3,9 @@
     -
       args:
         flavor:
-            name: "m1.tiny"
+            name: "m1.over"
         image:
-            name: "TestVM"
+            name: "cirros-0.3.4-x86_64"
         name: "eayun_vm"
       runner:
         type: "constant"
