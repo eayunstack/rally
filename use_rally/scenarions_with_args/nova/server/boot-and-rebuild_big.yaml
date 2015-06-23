@@ -1,18 +1,17 @@
 ---
-  NovaServers.boot_and_rebuild_server:
-    -
-      args:
-        flavor:
-            name: "m1.small"
-        from_image:
-            name: "cirros-0.3.4-x86_64"
-        to_image:
-            name: "ubuntu-14.04-x86_64"
-      runner:
-        type: "constant"
-        times: 5
-        concurrency: 2
-      context:
-        users:
-            tenants: 1
-            users_per_tenant: 1
+NovaServers.boot_and_rebuild_server:
+- args:
+    flavor:
+      name: "m1.small"
+    from_image:
+      name: "cirros-0.3.4-x86_64"
+    to_image:
+      name: "ubuntu-14.04-x86_64"
+  runner:
+    type: "constant"
+    times: 5
+    concurrency: 2
+  context:
+    users:
+      tenants: 1
+      users_per_tenant: 1

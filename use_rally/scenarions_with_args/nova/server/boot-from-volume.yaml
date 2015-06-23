@@ -16,6 +16,7 @@
         users:
           tenants: 1
           users_per_tenant: 1
+  NovaServers.boot_server_from_volume:
     -
       args:
         flavor:
