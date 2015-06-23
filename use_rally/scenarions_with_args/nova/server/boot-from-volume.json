@@ -8,7 +8,7 @@
                 "image": {
                     "name": "cirros-0.3.4-x86_64"
                 },
-                "volume_size": 10
+                "volume_size": 10,
                 "volume_type": "exlx"
             },
             "runner": {
@@ -34,7 +34,7 @@
                 "image": {
                     "name": "cirros-0.3.4-x86_64"
                 },
-                "volume_size": 10
+                "volume_size": 10,
                 "volume_type": "rbd"
             },
             "runner": {

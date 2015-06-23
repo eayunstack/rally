@@ -8,8 +8,8 @@
                 "image": {
                     "name": "cirros-0.3.4-x86_64"
                 },
-                "force_delete": false
-                "min_sleep": 5
+                "force_delete": false,
+                "min_sleep": 5,
                 "max_sleep": 20
             },
             "runner": {
