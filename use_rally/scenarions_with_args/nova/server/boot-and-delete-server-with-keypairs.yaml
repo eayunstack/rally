@@ -1,18 +1,18 @@
 ---
-  NovaServers.boot_and_list_server:
+  NovaKeypair.boot_and_delete_server_with_keypair:
     -
       args:
         flavor:
             name: "m1.tiny"
         image:
-            name: "cirros-0.3.4-x86_64"
-        detailed: True
+            name: "TestVM"
       runner:
         type: "constant"
-        times: 50
-        concurrency: 2
+        times: 1
+        concurrency: 1
       context:
         users:
           tenants: 1
           users_per_tenant: 1
-
+        network:
+          start_cidr: "100.1.0.0/26"

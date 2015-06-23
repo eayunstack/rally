@@ -2,12 +2,12 @@
 NovaServers.boot_and_live_migrate_server:
 - args:
     flavor:
-      name: m1.nano
+      name: "m1.tiny"
     image:
-      name: "^cirros.*uec$"
+      name: "cirros-0.3.4-x86_64"
     block_migration: false
   runner:
-    type: constant
+    type: "constant"
     times: 10
     concurrency: 2
   context:

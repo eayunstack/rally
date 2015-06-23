@@ -1,18 +1,20 @@
 ---
-  NovaServers.boot_and_list_server:
+  NovaServers.resize_server:
     -
       args:
         flavor:
-            name: "m1.tiny"
+            name: "m1.small"
         image:
             name: "cirros-0.3.4-x86_64"
-        detailed: True
+        to_flavor:
+            name: "m1.tiny"
+        confirm: true
+        force_delete: false
       runner:
         type: "constant"
-        times: 50
-        concurrency: 2
+        times: 10
+        concurrency: 5
       context:
         users:
           tenants: 1
           users_per_tenant: 1
-

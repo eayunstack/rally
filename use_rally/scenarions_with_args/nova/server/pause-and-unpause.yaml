@@ -3,9 +3,9 @@
     -
       args:
         flavor:
-            name: "m1.nano"
+            name: "m1.tiny"
         image:
-            name: "^cirros.*uec$"
+            name: "cirros-0.3.4-x86_64"
         force_delete: false
       runner:
         type: "constant"
@@ -13,5 +13,5 @@
         concurrency: 2
       context:
         users:
-          tenants: 3
-          users_per_tenant: 2
+          tenants: 1
+          users_per_tenant: 1

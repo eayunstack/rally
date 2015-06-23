@@ -1,19 +1,23 @@
 {
-    "NovaServers.pause_and_unpause_server": [
+    "NovaServers.resize_server": [
         {
             "args": {
                 "flavor": {
-                    "name": "m1.tiny"
+                    "name": "m1.small"
                 },
                 "image": {
                     "name": "cirros-0.3.4-x86_64"
                 },
+                "to_flavor": {
+                    "name": "m1.tiny"
+                },
+                "confirm": true,
                 "force_delete": false
             },
             "runner": {
                 "type": "constant",
                 "times": 10,
-                "concurrency": 2
+                "concurrency": 5
             },
             "context": {
                 "users": {
@@ -24,3 +28,4 @@
         }
     ]
 }
+

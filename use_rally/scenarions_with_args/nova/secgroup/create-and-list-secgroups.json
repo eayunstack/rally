@@ -2,7 +2,7 @@
     "NovaSecGroup.create_and_list_secgroups": [
         {
             "args": {
-                "security_group_count": 10,
+                "security_group_count": 2,
                 "rules_per_security_group": 10
             },
             "runner": {
@@ -12,8 +12,14 @@
             },
             "context": {
                 "users": {
-                    "tenants": 3,
-                    "users_per_tenant": 2
+                    "tenants": 1,
+                    "users_per_tenant": 1
+                },
+                "quotas": {
+                    "nova": {
+                        "ram": -1,
+                        "instances": 5
+                    }
                 }
             }
         }

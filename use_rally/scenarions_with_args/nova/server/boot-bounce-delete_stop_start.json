@@ -1,5 +1,5 @@
 {
-    "NovaServers.pause_and_unpause_server": [
+    "NovaServers.boot_and_bounce_server": [
         {
             "args": {
                 "flavor": {
@@ -8,7 +8,10 @@
                 "image": {
                     "name": "cirros-0.3.4-x86_64"
                 },
-                "force_delete": false
+                "force_delete": false,
+                "actions": [
+                    {"stop_start": 1}
+                ]
             },
             "runner": {
                 "type": "constant",
@@ -17,8 +20,8 @@
             },
             "context": {
                 "users": {
-                    "tenants": 1,
-                    "users_per_tenant": 1
+                    "tenants": 3,
+                    "users_per_tenant": 2
                 }
             }
         }
