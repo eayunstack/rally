@@ -5,7 +5,7 @@
         flavor:
             name: "m1.tiny"
         image:
-            name: "TestVM"
+            name: "for_rally_test"
         name: "eayun_vm"
       runner:
         type: "constant"

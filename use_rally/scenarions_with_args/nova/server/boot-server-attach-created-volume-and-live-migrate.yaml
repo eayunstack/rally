@@ -2,13 +2,32 @@
 NovaServers.boot_server_attach_created_volume_and_live_migrate:
 - args:
     flavor:
-      name: m1.nano
+      name: "m1.tiny"
     image:
-      name: "^cirros.*uec$"
+      name: "cirros-0.3.4-x86_64"
     size: 10
     block_migration: false
+    create_volume_kwargs:
+      volume_type: "eqlx"
   runner:
-    type: constant
+    type: "constant"
+    times: 5
+    concurrency: 1
+  context:
+    users:
+      tenants: 2
+      users_per_tenant: 2
+- args:
+    flavor:
+      name: "m1.tiny"
+    image:
+      name: "cirros-0.3.4-x86_64"
+    size: 10
+    block_migration: false
+    create_volume_kwargs:
+      volume_type: "rbd"
+  runner:
+    type: "constant"
     times: 5
     concurrency: 1
   context:
