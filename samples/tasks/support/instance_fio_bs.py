@@ -9,7 +9,7 @@ import random, string
 import os
 
 
-iodepth = '1'
+iodepth = '4'
 
 
 def _net_get_nic_status():
@@ -57,25 +57,33 @@ def check_fio():
 def test_fio_bs(file_path):
     fio_installed = check_fio()
     if fio_installed:
-        bs_args = ['4k', '8k', '16k', '64k', '1M', '2M', '4M', '8M']
+        bs_args = ['4k', '8k', '16k', '64k', '512k', '1M', '2M', '4M', '8M']
         results = {}
-        for bs in bs_args:
-            (stat, out) = commands.getstatusoutput('fio -ioengine=libaio -bs=%s -direct=1\
-                                                    -thread -rw=randread -size=100G\
-                                                    -filename=/dev/vdb\
-                                                    -name="FIO with bs"\
-                                                    -iodepth=%s -runtime=300'
-                                                    % (bs, iodepth))
-            if stat !=0:
-                # error
-                print 'error'
-            else:
-                # write to file
-                title = '\n\n====================  ' + bs + '  ====================\n'
-                write_to_file(file_path, title)
-                write_to_file(file_path, out)
-                #print out
-                results[bs] = out
+        (checkdisk_s, checkdisk_o) = commands.getstatusoutput('ls /dev/vdb')
+        if checkdisk_s !=0:
+            (s, o) = commands.getstatusoutput('fdisk -l')
+            os.mknod('/tmp/disk')
+            write_to_file('/tmp/disk', o)
+            scp_to_rally('/tmp/disk')
+            print 'no disk'
+        else:
+            for bs in bs_args:
+                (stat, out) = commands.getstatusoutput('fio -ioengine=libaio -bs=%s -direct=1\
+                                                        -thread -rw=randrw -size=100G\
+                                                        -filename=/dev/vdb\
+                                                        -name="FIO with bs"\
+                                                        -iodepth=%s -runtime=30'
+                                                        % (bs, iodepth))
+                if stat !=0:
+                    # error
+                    print 'error'
+                else:
+                    # write to file
+                    title = '\n\n====================  bs=' + bs + '  ====================\n'
+                    write_to_file(file_path, title)
+                    write_to_file(file_path, out)
+                    #print out
+                    results[bs] = out
     else:
         print 'fio not install'
     #print results
@@ -83,7 +91,7 @@ def test_fio_bs(file_path):
 
 def _results():
     # excute test and output results
-    file_path = '/tmp/' + 'fio_' + random_str()
+    file_path = '/tmp/' + 'fio_bs_' + random_str()
     os.mknod(file_path)
     results_dict = test_fio_bs(file_path)
     output_info = {}
@@ -170,7 +178,7 @@ def write_to_file(file_path, output):
         print 'write to file error'
  
 def scp_to_rally(file_path):
-    host = "25.0.0.125"
+    host = "25.0.1.254"
     username = "root"
     pw = "abc123"
 
