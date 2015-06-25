@@ -9,7 +9,6 @@ import random, string
 import os
 
 
-<<<<<<< HEAD
 iodepth = '4'
 rw = 'randwrite'
 iodepth = '1'

@@ -179,11 +179,7 @@ def write_to_file(file_path, output):
         print 'write to file error'
  
 def scp_to_rally(file_path):
-<<<<<<< HEAD
     host = "25.0.1.254"
-=======
-    host = "25.0.0.125"
->>>>>>> scripts: test the performance of instance (network and disk)
     username = "root"
     pw = "abc123"
 
