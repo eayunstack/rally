@@ -1,0 +1,25 @@
+---
+  VMTasks.boot_runcommand_delete:
+    -
+      args:
+        flavor:
+            name: "m1.small"
+        image:
+            name: "coffee-test-disk-new"
+        volume_args:
+            size: 100
+            volume_type: "eqlx"
+        floating_network: "net04_ext"
+        force_delete: false
+        script: "/root/rally/samples/tasks/support/instance_fio_bs.py"
+        interpreter: "sudo /usr/bin/python"
+        username: "centos"
+      runner:
+        type: "constant"
+        times: 1
+        concurrency: 1
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        network: {}
