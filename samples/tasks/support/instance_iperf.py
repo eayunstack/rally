@@ -6,8 +6,10 @@ import os
 import paramiko
 import random, string
 
-tcp_server_ip = '25.0.0.211'
-udp_server_ip = '25.0.0.212'
+#tcp_server_ip = '172.16.200.185'
+#udp_server_ip = '172.16.200.184'
+server_ip = '172.16.200.184'
+rally_host = '25.0.1.254'
 
 def _network_get_nic_status():
     # need to rewrite
@@ -39,7 +41,7 @@ def install_iperf():
             if check_wget:
                 #print 'install wget'
                 (wget_s, wget_out) = commands.getstatusoutput('yum -y install wget')
-            #print 'install iperf'
+            #print 'install iperf': NEED TO REWRITE -- change to iperf3
             (install_s, install_out) = commands.getstatusoutput('wget https://iperf.fr/download/iperf_2.0.5/iperf_2.0.5-2_amd64 ; chmod +x iperf_2.0.5-2_amd64 ; sudo mv iperf_2.0.5-2_amd64 /usr/bin/iperf')
             if install_s != 0:
                 #print 'Install Failed: \n%s' % install_out
@@ -71,7 +73,7 @@ def test_net_tcp(file_path):
     iperf_installed = check_iperf_install()
     if iperf_installed:
         #print 'test tcp'
-        (stat, out) = commands.getstatusoutput('iperf -c %s -t 300' % tcp_server_ip)
+        (stat, out) = commands.getstatusoutput('iperf3 -c %s -t 60' % server_ip)
         if stat != 0:
             #print 'Something Error!\n %s' % out
             pass
@@ -81,7 +83,7 @@ def test_net_tcp(file_path):
             # the last line was what we want
             # split and get the data
             #print 'finish test tcp'
-            data = out.split('\n')[-1]
+            data = out.split('\n')[-4]
             transfer_v = float(data.split()[4])
             bandwidth_v = float(data.split()[6])
             results = {}
@@ -97,7 +99,7 @@ def test_net_udp(file_path):
     iperf_installed = check_iperf_install()
     if iperf_installed:
         #print 'test udp'
-        (stat, out) = commands.getstatusoutput('iperf -u -c %s -b 1000M -t 300' % udp_server_ip)
+        (stat, out) = commands.getstatusoutput('iperf3 -u -c %s -b 10000M -t 60' % server_ip)
         if stat != 0:
             #print 'Something Error!\n %s' % out
             pass
@@ -106,7 +108,7 @@ def test_net_udp(file_path):
             write_to_file(file_path, out + '\n\n')
             try:
                 #print 'finish test udp'
-                data = out.split('\n')[-1]
+                data = out.split('\n')[-4]
                 transfer_v = float(data.split()[4])
                 bandwidth_v = float(data.split()[6])
                 jitter_v = float(data.split()[8])
@@ -114,7 +116,7 @@ def test_net_udp(file_path):
                 total_v = int(data.split()[-2].split('/')[-1])
                 datagrams_v = float(lost_v) / float(total_v) * 100
             except Exception:
-                data = out.split('\n')[-2]
+                data = out.split('\n')[-3]
             finally:
                 transfer_v = float(data.split()[4])
                 bandwidth_v = float(data.split()[6])
@@ -220,11 +222,10 @@ def write_to_file(file_path, output):
         print 'write to file error'
  
 def scp_to_rally(file_path):
-    host = "25.0.0.125"
     username = "root"
     pw = "abc123"
 
-    ssh = SSHConnection(host, username, pw)
+    ssh = SSHConnection(rally_host, username, pw)
     # the source path was the same as destination path
     ssh.put(file_path, file_path)
     ssh.close()
