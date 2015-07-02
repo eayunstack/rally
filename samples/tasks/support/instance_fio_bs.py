@@ -10,7 +10,7 @@ import os
 
 
 iodepth = '4'
-
+rw = 'randwrite'
 
 def _net_get_nic_status():
     # need to rewrite
@@ -69,11 +69,11 @@ def test_fio_bs(file_path):
         else:
             for bs in bs_args:
                 (stat, out) = commands.getstatusoutput('fio -ioengine=libaio -bs=%s -direct=1\
-                                                        -thread -rw=randrw -size=100G\
+                                                        -thread -rw=%s -size=100G\
                                                         -filename=/dev/vdb\
                                                         -name="FIO with bs"\
                                                         -iodepth=%s -runtime=30'
-                                                        % (bs, iodepth))
+                                                        % (bs, rw, iodepth))
                 if stat !=0:
                     # error
                     print 'error'

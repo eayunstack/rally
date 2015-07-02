@@ -10,6 +10,7 @@ import os
 
 
 bs = '512k'
+rw = 'randwrite'
 
 
 def _net_get_nic_status():
@@ -69,11 +70,11 @@ def test_fio_iodepth(file_path):
         else:
             for iodepth in iodepth_args:
                 (stat, out) = commands.getstatusoutput('fio -ioengine=libaio -bs=%s -direct=1\
-                                                        -thread -rw=randrw -size=100G\
+                                                        -thread -rw=%s -size=100G\
                                                         -filename=/dev/vdb\
                                                         -name="FIO with bs"\
                                                         -iodepth=%s -runtime=300'
-                                                        % (bs, iodepth))
+                                                        % (bs, rw, iodepth))
                 if stat !=0:
                     # error
                     print 'error'
