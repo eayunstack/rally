@@ -3,20 +3,21 @@
     -
       args:
         flavor:
-            name: "m1.small"
+            name: "m1.medium"
         image:
-            name: "coffee-test-iperf"
+            name: "coffee-iperf3"
         floating_network: "net04_ext"
+        availability_zone: "nova:node-4.eayun.com"
+        nics: [net-id: "f9de6dfa-e172-45a2-a329-006e3d6664de"]
         force_delete: false
         script: "/root/rally/samples/tasks/support/instance_iperf.py"
         interpreter: "sudo /usr/bin/python"
         username: "centos"
       runner:
         type: "constant"
-        times: 10
-        concurrency: 5
+        times: 20
+        concurrency: 1
       context:
         users:
           tenants: 1
           users_per_tenant: 1
-        network: {}
