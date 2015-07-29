@@ -3,20 +3,20 @@
     -
       args:
         flavor:
-            name: "m1.nano"
+            name: "m1.tiny"
         image:
-            name: "^cirros.*uec$"
-        floating_network: "public"
+            name: "TestVM"
+        floating_network: "net04_ext"
         force_delete: false
-        script: "samples/tasks/support/instance_dd_test.sh"
+        script: "/root/rally/samples/tasks/support/instance_dd_test.sh"
         interpreter: "/bin/sh"
         username: "cirros"
       runner:
         type: "constant"
-        times: 10
-        concurrency: 2
+        times: 1
+        concurrency: 1
       context:
         users:
-          tenants: 3
-          users_per_tenant: 2
+          tenants: 1
+          users_per_tenant: 1
         network: {}
