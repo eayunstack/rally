@@ -109,8 +109,8 @@ class NovaScenario(scenario.OpenStackScenario):
     @atomic.action_timer("nova.boot_server")
     def _boot_server(self, image_id, flavor_id,
                      auto_assign_nic=False, name=None, key_name=None, **kwargs):
-#    def _boot_server(self, image_id, flavor_id,
-#                     auto_assign_nic=False, name=None, **kwargs):
+#   def _boot_server(self, image_id, flavor_id,
+#                    auto_assign_nic=False, name=None, **kwargs):
         """Boot a server.
 
         Returns when the server is actually booted and in "ACTIVE" state.
