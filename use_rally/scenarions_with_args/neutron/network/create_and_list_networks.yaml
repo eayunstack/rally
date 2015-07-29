@@ -2,11 +2,13 @@
   NeutronNetworks.create_and_list_networks:
     -
       args:
-        network_create_args: {}
+        network_create_args: {
+            name: "coffee_test"
+        }
       runner:
         type: "constant"
-        times: 100
-        concurrency: 10
+        times: 20
+        concurrency: 2
       context:
         users:
           tenants: 1

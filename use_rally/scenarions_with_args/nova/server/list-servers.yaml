@@ -5,8 +5,8 @@
         detailed: True
       runner:
         type: "constant"
-        times: 1
-        concurrency: 1
+        times: 50
+        concurrency: 2
       context:
         users:
           tenants: 1
@@ -15,5 +15,5 @@
           flavor:
               name: "m1.tiny"
           image:
-              name: "TestVM"
+              name: "cirros-0.3.4-x86_64"
           servers_per_tenant: 2
