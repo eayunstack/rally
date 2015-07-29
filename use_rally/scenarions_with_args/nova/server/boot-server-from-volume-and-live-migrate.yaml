@@ -1,37 +1,38 @@
 ---
-NovaServers.boot_server_from_volume_and_live_migrate:
-- args:
-    flavor:
-      name: "m1.tiny"
-    image:
-      name: "cirros-0.3.4-x86_64"
-    block_migration: false
-    volume_size: 10
-    force_delete: false
-    volume_type: "eqlx"
-  runner:
-    type: "constant"
-    times: 10
-    concurrency: 2
-  context:
-    users:
-      tenants: 1
-      users_per_tenant: 1
-- args:
-    flavor:
-      name: "m1.tiny"
-    image:
-      name: "cirros-0.3.4-x86_64"
-    block_migration: false
-    volume_size: 10
-    force_delete: false
-    volume_type: "rbd"
-  runner:
-  runner:
-    type: "constant"
-    times: 10
-    concurrency: 2
-  context:
-    users:
-      tenants: 1
-      users_per_tenant: 1
+  NovaServers.boot_server_from_volume_and_live_migrate:
+    -
+      args:
+        flavor:
+            name: "m1.tiny"
+        image:
+            name: "cirros-0.3.4-x86_64"
+        block_migration: false
+        volume_size: 10
+        force_delete: false
+        volume_type: "eqlx"
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+            tenants: 1
+            users_per_tenant: 1
+    -
+      args:
+        flavor:
+            name: "m1.tiny"
+        image:
+            name: "cirros-0.3.4-x86_64"
+        block_migration: false
+        volume_size: 10
+        force_delete: false
+        volume_type: "rbd"
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+            tenants: 1
+            users_per_tenant: 1

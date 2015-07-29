@@ -3,16 +3,15 @@
     -
       args:
         security_group_count: 2
-        rules_per_security_group: 10
+        rules_per_security_group: 9
       runner:
         type: "constant"
-        times: 10
-        concurrency: 2
+        times: 4
+        concurrency: 1
       context:
         users:
           tenants: 1
           users_per_tenant: 1
         quotas:
           nova:
-              ram: -1
               instances: 5

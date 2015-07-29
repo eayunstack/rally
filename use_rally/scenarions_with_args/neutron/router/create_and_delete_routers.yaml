@@ -10,7 +10,7 @@
       runner:
         type: "constant"
         times: 30
-        concurrency: 10
+        concurrency: 5
       context:
         users:
           tenants: 1

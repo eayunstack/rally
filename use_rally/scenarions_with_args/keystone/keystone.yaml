@@ -1,0 +1,94 @@
+---
+  KeystoneBasic.get_entities:
+    -
+      runner:
+        type: "constant"
+        times: 100
+        concurrency: 10
+
+  KeystoneBasic.create_and_delete_service:
+    -
+      args:
+        name: "Rally_test_service"
+        service_type: "Really_test_type"
+        description: "test_description"
+      runner:
+        type: "constant"
+        times: 100
+        concurrency: 10
+
+  KeystoneBasic.create_and_list_services:
+    -
+      args:
+        name: "Rally_test_service"
+        service_type: "Really_test_type"
+        description: "test_description"
+      runner:
+        type: "constant"
+        times: 100
+        concurrency: 10
+
+  KeystoneBasic.create_and_list_tenants:
+    -
+      args:
+        name_length: 10
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 1
+
+  KeystoneBasic.create_tenant_with_users:
+    -
+      args:
+        name_length: 10
+        users_per_tenant: 10
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 10
+
+  KeystoneBasic.create_tenant:
+    -
+      args:
+        name_length: 10
+      runner:
+        type: "constant"
+        times: 100
+        concurrency: 10
+
+  KeystoneBasic.create_delete_user:
+    -
+      args:
+        name_length: 10
+      runner:
+        type: "constant"
+        times: 100
+        concurrency: 10
+
+  KeystoneBasic.create_and_list_users:
+    -
+      args:
+        name_length: 10
+      runner:
+        type: "constant"
+        times: 100
+        concurrency: 10
+
+  KeystoneBasic.create_tenant_with_users:
+    -
+      args:
+        name_length: 10
+        users_per_tenant: 10
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 10
+
+  KeystoneBasic.create_user:
+    -
+      args:
+        name_length: 10
+      runner:
+        type: "constant"
+        times: 100
+        concurrency: 10
