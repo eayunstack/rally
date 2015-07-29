@@ -3,14 +3,15 @@
     -
       args:
         flavor:
-            name: "m1.tiny"
+            name: "m1.small"
         image:
-            name: "TestVM"
+            name: "centos-7.0-x86_64-raw-coffee"
         floating_network: "net04_ext"
+        availability_zone: "nova:node-4.eayun.com"
         force_delete: false
-        script: "/root/rally/samples/tasks/support/instance_dd_test.sh"
-        interpreter: "/bin/sh"
-        username: "cirros"
+        script: "/root/test.py"
+        interpreter: "sudo /usr/bin/python"
+        username: "centos"
       runner:
         type: "constant"
         times: 1

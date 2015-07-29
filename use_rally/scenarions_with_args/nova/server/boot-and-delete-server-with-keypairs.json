@@ -3,11 +3,14 @@
         {
             "args": {
                 "flavor": {
-                    "name": "m1.nano"
+                    "name": "m1.tiny"
                 },
                 "image": {
-                    "name": "^cirros.*uec$"
-                }
+                    "name": "cirros-0.3.4-x86_64"
+                },
+                "nics": [
+                    {"net-id": "61cd052b-a62d-47b2-8b2e-3687c5921983"}   
+                ]
             },
             "runner": {
                 "type": "constant",

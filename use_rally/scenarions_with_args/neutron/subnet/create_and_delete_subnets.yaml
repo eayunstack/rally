@@ -3,13 +3,13 @@
     -
       args:
         network_create_args: {}
-        subnet_create_args: {}
-        subnet_cidr_start: "1.1.0.0/30"
+        subnet_create_args:
+        subnet_cidr_start: "1.1.0.0/24"
         subnets_per_network: 2
       runner:
         type: "constant"
-        times: 100
-        concurrency: 10
+        times: 30
+        concurrency: 5
       context:
         users:
           tenants: 1

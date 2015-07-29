@@ -6,10 +6,10 @@
             name: "m1.tiny"
         image:
             name: "TestVM"
-        name: "eayun_vm"
+        name: "why_error"
       runner:
         type: "constant"
-        times: 20
+        times: 2
         concurrency: 1
       context:
         users:
