@@ -1,0 +1,34 @@
+---
+  NovaServers.boot_server_from_volume:
+    -
+      args:
+        flavor:
+            name: "m1.tiny"
+        image:
+            name: "cirros-0.3.4-x86_64-raw"
+        volume_size: 10
+        volume_type: "eqlx"
+      runner:
+        type: "constant"
+        times: 1
+        concurrency: 1
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+    -
+      args:
+        flavor:
+            name: "m1.tiny"
+        image:
+            name: "cirros-0.3.4-x86_64-raw"
+        volume_size: 10
+        volume_type: "rbd"
+      runner:
+        type: "constant"
+        times: 1
+        concurrency: 1
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
