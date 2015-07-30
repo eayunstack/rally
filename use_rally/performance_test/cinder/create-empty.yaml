@@ -1,0 +1,26 @@
+---
+  CinderVolumes.create_volume:
+    -
+      args:
+        size: 1
+        volume_type: "eqlx"
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 1
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+    -
+      args:
+        size: 1
+        volume_type: "rbd"
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 1
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
