@@ -1,0 +1,17 @@
+---
+  NovaServers.boot_server_from_old_volume:
+    -
+      args:
+        flavor:
+            name: "m1.small"
+        image:
+            name: "cirros-0.3.4-x86_64-raw"
+        volume_id: "d9b9327e-fa0c-4bac-9c18-b36424fedd2d"
+      runner:
+        type: "constant"
+        times: 1
+        concurrency: 1
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
