@@ -6,9 +6,9 @@
     "use_public_urls": True,
     "endpoint": "http://25.0.0.2:35357/v2.0",
     "admin": {
-        "username": "admin",
-        "password": "admin",
-        "tenant_name": "admin"
+        "username": "rally_admin",
+        "password": "rally123",
+        "tenant_name": "rally"
     },
     "https_insecure": False,
     "https_cacert": "",
