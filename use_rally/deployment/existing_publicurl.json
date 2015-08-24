@@ -7,7 +7,7 @@
     "endpoint": "http://25.0.0.2:35357/v2.0",
     "admin": {
         "username": "rally_admin",
-        "password": "rally123",
+        "password": "abc123",
         "tenant_name": "rally"
     },
     "https_insecure": False,
