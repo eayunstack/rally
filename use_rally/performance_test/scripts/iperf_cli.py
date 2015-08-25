@@ -15,7 +15,7 @@ def test1():
         myfile=open('./iperf_log.txt','a+')
         if result[0]==0:
             myresult=re.findall('\d*\.\d*\s\w*/sec',result[1])
-            myfile.write('\nfrom'+ip_from+'to'+server_ip+'\t'+myresult[0]+'\t'+time.strftime('%c',time.localtime(time.time())))
+            myfile.write('\nfrom'+ip_from+'to'+server_ip+'\tBandwidth->'+myresult[0]+'\t'+time.strftime('%c',time.localtime(time.time())))
         else:
             myfile.write('\n'+'ERROR\t'+result[1]+time.strftime('%c',time.localtime(time.time())))  
     finally:
