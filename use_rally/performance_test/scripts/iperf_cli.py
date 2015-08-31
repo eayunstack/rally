@@ -7,10 +7,10 @@ import socket
 import fcntl
 import struct
 
-server_ip='127.0.0.1'
-def test1():
+server_ip='127.0.0.1'#自己改server_ip
+def iperf_cli():
     result=commands.getstatusoutput('iperf -c %s'%server_ip)
-    ip_from=get_ip_address('eth0')
+    ip_from=get_ip_address('eth0')#自己改网卡名
     try:
         myfile=open('./iperf_log.txt','a+')
         if result[0]==0:
@@ -27,4 +27,4 @@ def get_ip_address(ifname):
     return socket.inet_ntoa(fcntl.ioctl(s.fileno(),0x8915,struct.pack('256s', ifname[:15]))[20:24])
  
 if __name__=='__main__':
-    test1()
+    iperf_cli()
