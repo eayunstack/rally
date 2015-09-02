@@ -6,26 +6,26 @@ import re
 import socket
 import fcntl
 import struct
-
-server_ip='127.0.0.1'
+#client端需要先安装sshpass,sshpass用以直接在命令行中指定密码.
+#初次使用,先手动ssh到server端,建立认证,就是自己输入'yes'.否则就无法取到server的hostname.
+server_ip='192.168.1.122'
+pwd='1q2w3e'
+server_name='yeming'
 def iperf_cli():
     result=commands.getstatusoutput('iperf -c %s'%server_ip)
-    # ip_from=get_ip_address('eth0')
-    hostname=commands.getoutput('cat /etc/hostname')
+    hostname=commands.getstatusoutput('cat /etc/hostname')
+    server=commands.getstatusoutput('sshpass -p "%s" ssh %s@%s "cat /etc/hostname"'%(pwd,server_name,server_ip,))
+    # print server
     try:
         myfile=open('./iperf_log.txt','a+')
         if result[0]==0:
             myresult=re.findall('\d*\.\d*\s\w*/sec',result[1])
             myresult1='\t'.join(myresult)
-            myfile.write('\nfrom\t'+hostname+'\tto\t'+server_ip+'\tBandwidth->'+myresult1+'\t'+time.strftime('%c',time.localtime(time.time())))
+            myfile.write('\nfrom\t'+hostname[1]+'\tto\t'+server[1]+'\tBandwidth->'+myresult1+'\t'+time.strftime('%c',time.localtime(time.time())))
         else:
             myfile.write('\n'+'ERROR\t'+result[1]+time.strftime('%c',time.localtime(time.time())))  
     finally:
         myfile.close()
 
-'''def get_ip_address(ifname):
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    return socket.inet_ntoa(fcntl.ioctl(s.fileno(),0x8915,struct.pack('256s', ifname[:15]))[20:24])'''
- 
 if __name__=='__main__':
     iperf_cli()
