@@ -6,7 +6,7 @@ import re
 import socket
 import fcntl
 import struct
-#client端需要先安装sshpass,sshpass用以直接在命令行中指定密码.
+#client端需要先安装sshpass,sshpass用以在登录服务器端时,直接在命令行中指定密码.
 #初次使用,先手动ssh到server端,建立认证,就是自己输入'yes'.否则就无法取到server的hostname.
 server_ip='192.168.1.122'
 pwd='1q2w3e'
