@@ -145,6 +145,13 @@ class NovaScenario(scenario.OpenStackScenario):
             elif key_name not in kwargs["key_name"]:
                 kwargs["key_name"].append(key_name)
 
+        # add by coffee: if use keypair to ssh
+        if key_name:
+            if "key_name" not in kwargs:
+                kwargs["key_name"] = key_name
+            elif key_name not in kwargs["key_name"]:
+                kwargs["key_name"].append(key_name)
+
         server = self.clients("nova").servers.create(
             server_name, image_id, flavor_id, **kwargs)
 
