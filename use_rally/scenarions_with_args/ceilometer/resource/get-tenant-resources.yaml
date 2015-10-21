@@ -14,3 +14,4 @@
            counter_type: "gauge"
            counter_volume: 1.0
            counter_unit: "instance"
+
