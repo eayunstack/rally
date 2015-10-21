@@ -9,7 +9,7 @@
          counter_type: "cumulative"
        runner:
          type: "constant"
-         times: 200
+         times: 100
          concurrency: 5
        context:
          users:
