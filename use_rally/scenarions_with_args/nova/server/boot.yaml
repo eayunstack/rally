@@ -6,10 +6,9 @@
             name: "m1.tiny"
         image:
             name: "TestVM"
-        name: "why_error"
       runner:
         type: "constant"
-        times: 2
+        times: 20
         concurrency: 1
       context:
         users:
