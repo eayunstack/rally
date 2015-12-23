@@ -1,44 +1,24 @@
+{% set flavor_name = flavor_name or "m1.tiny" %}
+{% set image_name = image_name or "cirros-0.3.4-x86_64" %}
 ---
   NovaServers.boot_server_attach_created_volume_and_live_migrate:
     -
       args:
         flavor:
-            name: "m1.tiny"
+            name: "{{flavor_name}}"
         image:
-            name: "cirros-0.3.4-x86_64"
-        size: 10
+            name: "{{image_name}}"
+        size: 1
         block_migration: false
         create_volume_kwargs:
-            volume_type: "eqlx"
+            volume_type: ""
         boot_server_kwargs:
-            nics:
-                [net-id: "61cd052b-a62d-47b2-8b2e-3687c5921983"]
+            auto_assign_nic: True
       runner:
         type: "constant"
-        times: 5
-        concurrency: 1
+        times: 10
+        concurrency: 2
       context:
         users:
-            tenants: 2
-            users_per_tenant: 2
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "cirros-0.3.4-x86_64"
-        size: 10
-        block_migration: false
-        create_volume_kwargs:
-            volume_type: "rbd"
-        boot_server_kwargs:
-            nics:
-                [net-id: "61cd052b-a62d-47b2-8b2e-3687c5921983"]
-      runner:
-        type: "constant"
-        times: 5
-        concurrency: 1
-      context:
-        users:
-            tenants: 2
-            users_per_tenant: 2
+            tenants: 1
+            users_per_tenant: 1

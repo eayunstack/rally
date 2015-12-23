@@ -6,5 +6,5 @@
         users_per_tenant: 10
       runner:
         type: "constant"
-        times: 10
+        times: 100
         concurrency: 10

@@ -1,20 +1,23 @@
+{% set flavor_name = flavor_name or "m1.tiny" %}
+{% set image_name = image_name or "cirros-0.3.4-x86_64" %}
 ---
   NovaSecGroup.boot_and_delete_server_with_secgroups:
     -
       args:
         flavor:
-            name: "m1.tiny"
+            name: "{{flavor_name}}"
         image:
-            name: "cirros-0.3.4-x86_64"
-        security_group_count: 10
-        rules_per_security_group: 10
+            name: "{{image_name}}"
+        auto_assign_nic: True
+        security_group_count: 9
+        rules_per_security_group: 5
       runner:
         type: "constant"
         times: 10
         concurrency: 2
       context:
         users:
-          tenants: 3
-          users_per_tenant: 2
+          tenants: 1
+          users_per_tenant: 1
         network:
           start_cidr: "100.1.0.0/26"

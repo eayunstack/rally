@@ -1,0 +1,18 @@
+---
+  GlanceImages.create_image_and_boot_instances:
+    -
+      args:
+        image_location: "/home/images/cirros-0.3.4-x86_64-raw"
+        container_format: "bare"
+        disk_format: "raw"
+        flavor:
+            name: "m1.tiny"
+        number_instances: 2
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1

@@ -1,22 +1,6 @@
+{% set flavor_name = flavor_name or "m1.tiny" %}
+{% set image_name = image_name or "cirros-0.3.4-x86_64" %}
 ---
-  NovaKeypair.boot_and_delete_server_with_keypair:
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "cirros-0.3.4-x86_64"
-      runner:
-        type: "constant"
-        times: 5
-        concurrency: 2
-      context:
-        users:
-          tenants: 2
-          users_per_tenant: 1
-        network:
-          start_cidr: "100.1.0.0/26"
-
   NovaKeypair.create_and_delete_keypair:
     -
       runner:
@@ -25,8 +9,8 @@
         concurrency: 2
       context:
         users:
-          tenants: 3
-          users_per_tenant: 2
+          tenants: 1
+          users_per_tenant: 1
 
   NovaKeypair.create_and_list_keypairs:
     -
@@ -36,28 +20,8 @@
         concurrency: 2
       context:
         users:
-          tenants: 3
-          users_per_tenant: 2
-
-  NovaSecGroup.boot_and_delete_server_with_secgroups:
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "cirros-0.3.4-x86_64"
-        security_group_count: 10
-        rules_per_security_group: 10
-      runner:
-        type: "constant"
-        times: 10
-        concurrency: 2
-      context:
-        users:
-          tenants: 3
-          users_per_tenant: 2
-        network:
-          start_cidr: "100.1.0.0/26"
+          tenants: 1
+          users_per_tenant: 1
 
   NovaSecGroup.create_and_delete_secgroups:
     -
@@ -86,10 +50,28 @@
         users:
           tenants: 1
           users_per_tenant: 1
+
+  NovaSecGroup.create_and_list_secgroups:
     -
       args:
         security_group_count: 2
-        rules_per_security_group: 10
+        rules_per_security_group: 9
+      runner:
+        type: "constant"
+        times: 4
+        concurrency: 1
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          nova:
+              instances: 5
+
+  NovaSecGroup.create_and_update_secgroups:
+    -
+      args:
+        security_group_count: 9
       runner:
         type: "constant"
         times: 10
@@ -98,21 +80,124 @@
         users:
           tenants: 1
           users_per_tenant: 1
-        quotas:
-          nova:
-              ram: -1
-              instances: 5
+
+  NovaServers.boot_and_associate_floating_ip:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        auto_assign_nic: True
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          users_per_tenant: 1
+          tenants: 1
+        network: {}
+
+  NovaServers.boot_and_live_migrate_server:
+    -
+      args:
+        flavor:
+          name: "{{flavor_name}}"
+        image:
+          name: "{{flavor_name}}"
+        block_migration: true
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  NovaServers.boot_and_delete_multiple_servers:
+    -
+      args:
+        image:
+          name: "{{image_name}}"
+        flavor:
+          name: "{{flavor_name}}"
+        count: 5
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 1
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  NovaKeypair.boot_and_delete_server_with_keypair:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        auto_assign_nic: True
+      runner:
+        type: "constant"
+        times: 5
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        network:
+          start_cidr: "100.1.0.0/26"
+
+  NovaSecGroup.boot_and_delete_server_with_secgroups:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        auto_assign_nic: True
+        security_group_count: 9
+        rules_per_security_group: 5
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        network:
+          start_cidr: "100.1.0.0/26"
 
   NovaServers.boot_and_delete_server:
     -
       args:
         flavor:
-            name: "m1.tiny"
+            name: "{{flavor_name}}"
         image:
-            name: "cirros-0.3.4-x86_64"
+            name: "{{image_name}}"
+        auto_assign_nic: True
         force_delete: false
-        min_sleep: 5
-        max_sleep: 20
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  NovaServers.boot_and_get_console_output:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
       runner:
         type: "constant"
         times: 10
@@ -126,13 +211,14 @@
     -
       args:
         flavor:
-            name: "m1.tiny"
+            name: "{{flavor_name}}"
         image:
-            name: "cirros-0.3.4-x86_64"
+            name: "{{image_name}}"
         detailed: True
+        auto_assign_nic: True
       runner:
         type: "constant"
-        times: 50
+        times: 10
         concurrency: 2
       context:
         users:
@@ -143,10 +229,11 @@
     -
       args:
         flavor:
-            name: "m1.tiny"
+            name: "{{flavor_name}}"
         image:
-            name: "cirros-0.3.4-x86_64"
+            name: "{{image_name}}"
         block_migration: false
+        auto_assign_nic: True
       runner:
         type: "constant"
         times: 10
@@ -160,9 +247,10 @@
     -
       args:
         flavor:
-            name: "m1.tiny"
+            name: "{{flavor_name}}"
         image:
-            name: "cirros-0.3.4-x86_64"
+            name: "{{image_name}}"
+        auto_assign_nic: True
       runner:
         type: "constant"
         times: 10
@@ -173,123 +261,100 @@
             users_per_tenant: 1
 
   NovaServers.boot_and_rebuild_server:
+    {% for flavor_name in ( "m1.tiny", "m1.small") %}
     -
       args:
         flavor:
-            name: "m1.small"
+            name: "{{flavor_name}}"
         from_image:
             name: "cirros-0.3.4-x86_64"
         to_image:
             name: "ubuntu-14.04-x86_64"
       runner:
         type: "constant"
-        times: 5
-        concurrency: 2
-      context:
-        users:
-            tenants: 1
-            users_per_tenant: 1
-
-  NovaServers.boot_and_rebuild_server:
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        from_image:
-            name: "cirros-0.3.4-x86_64"
-        to_image:
-            name: "ubuntu-14.04-x86_64"
-      runner:
-        type: "constant"
-        times: 5
-        concurrency: 2
-      context:
-        users:
-            tenants: 1
-            users_per_tenant: 1
-
-  NovaServers.boot_and_bounce_server:
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "cirros-0.3.4-x86_64"
-        force_delete: false
-        actions:
-          -
-            hard_reboot: 1
-      runner:
-        type: "constant"
-        times: 10
-        concurrency: 2
-      context:
-        users:
-          tenants: 3
-          users_per_tenant: 2
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "cirros-0.3.4-x86_64"
-        force_delete: false
-        actions:
-          -
-            soft_reboot: 1
-      runner:
-        type: "constant"
-        times: 10
-        concurrency: 2
-      context:
-        users:
-          tenants: 3
-          users_per_tenant: 2
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "cirros-0.3.4-x86_64"
-        force_delete: false
-        actions:
-          -
-            stop_start: 1
-      runner:
-        type: "constant"
-        times: 10
-        concurrency: 2
-      context:
-        users:
-          tenants: 3
-          users_per_tenant: 2
-
-  NovaServers.boot_server:
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "for_rally_test"
-        name: "eayun_vm"
-      runner:
-        type: "constant"
-        times: 20
+        times: 1
         concurrency: 1
       context:
         users:
             tenants: 1
             users_per_tenant: 1
+    {% endfor %}
+
+  NovaServers.boot_and_show_server:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  NovaServers.boot_and_bounce_server:
+    -
+      args:
+        force_delete: false
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        actions:
+          -
+            hard_reboot: 1
+          -
+            soft_reboot: 1
+          -
+            stop_start: 1
+          -
+            rescue_unrescue: 1
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
 
   NovaServers.boot_server_from_volume_and_delete:
     -
       args:
         flavor:
-            name: "m1.tiny"
+            name: "{{flavor_name}}"
         image:
-            name: "cirros-0.3.4-x86_64"
-            volume_size: 10
-            force_delete: false
+            name: "{{image_name}}"
+        volume_size: 10
+        force_delete: false
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  NovaServers.boot_server_from_volume_and_resize:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        to_flavor:
+            name: "m1.small"
+        confirm: true
+        volume_size: 1
+        force_delete: false
+        do_delete: true
+        boot_server_kwargs: {}
+        create_volume_kwargs: {}
       runner:
         type: "constant"
         times: 10
@@ -303,11 +368,11 @@
     -
       args:
         flavor:
-            name: "m1.tiny"
+            name: "{{flavor_name}}"
         image:
-            name: "cirros-0.3.4-x86_64"
-        volume_size: 10
-        volume_type: "eqlx"
+            name: "{{image_name}}"
+        volume_size: 1
+        volume_type: ""
       runner:
         type: "constant"
         times: 10
@@ -316,18 +381,18 @@
         users:
           tenants: 1
           users_per_tenant: 1
+
+  NovaServers.boot_lock_unlock_and_delete:
     -
       args:
         flavor:
-            name: "m1.tiny"
+            name: "{{flavor_name}}"
         image:
-            name: "cirros-0.3.4-x86_64"
-        volume_size: 10
-        volume_type: "rbd"
+            name: "{{image_name}}"
       runner:
         type: "constant"
-        times: 10
-        concurrency: 2
+        times: 1
+        concurrency: 1
       context:
         users:
           tenants: 1
@@ -337,51 +402,15 @@
     -
       args:
         flavor:
-            name: "m1.tiny"
+            name: "{{flavor_name}}"
         image:
-            name: "cirros-0.3.4-x86_64"
-        size: 10
+            name: "{{image_name}}"
+        size: 1
         block_migration: false
         create_volume_kwargs:
-        volume_type: "eqlx"
-      runner:
-        type: "constant"
-        times: 5
-        concurrency: 1
-      context:
-        users:
-            tenants: 2
-            users_per_tenant: 2
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "cirros-0.3.4-x86_64"
-        size: 10
-        block_migration: false
-        create_volume_kwargs:
-        volume_type: "rbd"
-      runner:
-        type: "constant"
-        times: 5
-        concurrency: 1
-      context:
-        users:
-          tenants: 2
-          users_per_tenant: 2
-
-  NovaServers.boot_server_from_volume_and_live_migrate:
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "cirros-0.3.4-x86_64"
-        block_migration: false
-        volume_size: 10
-        force_delete: false
-        volume_type: "eqlx"
+            volume_type: ""
+        boot_server_kwargs:
+            auto_assign_nic: True
       runner:
         type: "constant"
         times: 10
@@ -390,16 +419,42 @@
         users:
             tenants: 1
             users_per_tenant: 1
+
+  NovaServers.boot_server_attach_created_volume_and_resize:
     -
       args:
         flavor:
-            name: "m1.tiny"
+            name: "{{flavor_name}}"
         image:
-            name: "cirros-0.3.4-x86_64"
-        block_migration: false
-        volume_size: 10
+            name: "{{image_name}}"
+        to_flavor:
+            name: "m1.small"
+        confirm: true
+        volume_size: 1
         force_delete: false
-        volume_type: "rbd"
+        do_delete: true
+        boot_server_kwargs: {}
+        create_volume_kwargs: {}
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  NovaServers.boot_server_from_volume_and_live_migrate:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        block_migration: false
+        volume_size: 1
+        force_delete: false
+        volume_type: ""
       runner:
         type: "constant"
         times: 10
@@ -413,9 +468,9 @@
     -
       args:
         flavor:
-            name: "m1.tiny"
+            name: "{{flavor_name}}"
         image:
-            name: "cirros-0.3.4-x86_64"
+            name: "{{image_name}}"
         force_delete: false
       runner:
         type: "constant"
@@ -428,12 +483,13 @@
 
   NovaServers.boot_server:
     -
+      {% for flavor_name in ( "m1.tiny", "m1.normal", "m1.medium" ) %}
       args:
         flavor:
-            name: "m1.tiny"
+            name: "{{flavor_name}}"
         image:
-            name: "cirros-0.3.4-x86_64"
-        name: "eayun_vm"
+            name: "{{image_name}}"
+        auto_assign_nic: True
       runner:
         type: "constant"
         times: 20
@@ -442,6 +498,29 @@
         users:
             tenants: 1
             users_per_tenant: 1
+      {% endfor %}
+
+  NovaHypervisors.list_hypervisors:
+    -
+      args:
+        detailed: True
+      runner:
+        type: "constant"
+        times: 20
+        concurrency: 2
+
+  NovaImages.list_images:
+    -
+      args:
+        detailed: True
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
 
   NovaServers.list_servers:
     -
@@ -457,18 +536,18 @@
           users_per_tenant: 1
         servers:
           flavor:
-              name: "m1.tiny"
+              name: "{{flavor_name}}"
           image:
-              name: "cirros-0.3.4-x86_64"
+              name: "{{image_name}}"
           servers_per_tenant: 2
 
   NovaServers.pause_and_unpause_server:
     -
       args:
         flavor:
-            name: "m1.tiny"
+            name: "{{flavor_name}}"
         image:
-            name: "cirros-0.3.4-x86_64"
+            name: "{{image_name}}"
         force_delete: false
       runner:
         type: "constant"
@@ -483,29 +562,11 @@
     -
       args:
         flavor:
-            name: "m1.small"
+            name: "{{flavor_name}}"
         image:
-            name: "cirros-0.3.4-x86_64"
+            name: "{{image_name}}"
         to_flavor:
             name: "m1.tiny"
-        confirm: true
-        force_delete: false
-      runner:
-        type: "constant"
-        times: 10
-        concurrency: 5
-      context:
-        users:
-          tenants: 1
-          users_per_tenant: 1
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "cirros-0.3.4-x86_64"
-        to_flavor:
-            name: "m1.small"
         confirm: true
         force_delete: false
       runner:
@@ -517,13 +578,30 @@
           tenants: 1
           users_per_tenant: 1
 
+  NovaServers.shelve_and_unshelve_server:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        force_delete: false
+      runner:
+        type: "constant"
+        times: 1
+        concurrency: 1
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
   NovaServers.suspend_and_resume_server:
     -
       args:
         flavor:
-            name: "m1.tiny"
+            name: "{{flavor_name}}"
         image:
-            name: "cirros-0.3.4-x86_64"
+            name: "{{image_name}}"
         force_delete: false
       runner:
         type: "constant"

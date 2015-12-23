@@ -1,3 +1,5 @@
+{% set flavor_name = flavor_name or "m1.tiny" %}
+{% set image_name = image_name or "cirros-0.3.4-x86_64" %}
 ---
   Authenticate.keystone:
     -
@@ -62,6 +64,389 @@
           tenants: 3
           users_per_tenant: 5
 
+  Authenticate.validate_heat:
+    -
+      args:
+        repetitions: 2
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 5
+      context:
+        users:
+          tenants: 3
+          users_per_tenant: 5
+
+  CeilometerAlarms.create_alarm_and_get_history:
+    -
+      args:
+        meter_name: "ram_util"
+        threshold: 10.0
+        type: "threshold"
+        state: "ok"
+        statistic: "avg"
+        alarm_actions: ["http://25.0.0.2:8776/alarm"]
+        ok_actions: ["http://25.0.0.2:8776/ok"]
+        insufficient_data_actions: ["http://25.0.0.2:8776/notok"]
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+
+  CeilometerAlarms.create_alarm:
+    -
+      args:
+        meter_name: "ram_util"
+        threshold: 10.0
+        type: "threshold"
+        statistic: "avg"
+        alarm_actions: ["http://25.0.0.2:8776/alarm"]
+        ok_actions: ["http://25.0.0.2:8776/ok"]
+        insufficient_data_actions: ["http://25.0.0.2:8776/notok"]
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+
+  CeilometerAlarms.create_and_delete_alarm:
+    -
+      args:
+        meter_name: "ram_util"
+        threshold: 10.0
+        type: "threshold"
+        statistic: "avg"
+        alarm_actions: ["http://25.0.0.2:8776/alarm"]
+        ok_actions: ["http://25.0.0.2:8776/ok"]
+        insufficient_data_actions: ["http://25.0.0.2:8776/notok"]
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 1
+
+  CeilometerAlarms.create_and_list_alarm:
+    -
+      args:
+        meter_name: "ram_util"
+        threshold: 10.0
+        type: "threshold"
+        statistic: "avg"
+        alarm_actions: ["http://25.0.0.2:8776/alarm"]
+        ok_actions: ["http://25.0.0.2:8776/ok"]
+        insufficient_data_actions: ["http://25.0.0.2:8776/notok"]
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 1
+
+  CeilometerQueries.create_and_query_alarm_history:
+    -
+      args:
+        orderby: !!null
+        limit: !!null
+        meter_name: "ram_util"
+        threshold: 10.0
+        type: "threshold"
+        statistic: "avg"
+        alarm_actions: ["http://25.0.0.2:8776/alarm"]
+        ok_actions: ["http://25.0.0.2:8776/ok"]
+        insufficient_data_actions: ["http://25.0.0.2:8776/notok"]
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 1
+
+  CeilometerQueries.create_and_query_alarms:
+    -
+      args:
+        filter: {"and": [{"!=": {"state": "dummy_state"}},{"=": {"type": "threshold"}}]}
+        orderby: !!null
+        limit: 10
+        meter_name: "ram_util"
+        threshold: 10.0
+        type: "threshold"
+        statistic: "avg"
+        alarm_actions: ["http://25.0.0.2:8776/alarm"]
+        ok_actions: ["http://25.0.0.2:8776/ok"]
+        insufficient_data_actions: ["http://25.0.0.2:8776/notok"]
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+
+  CeilometerAlarms.create_and_update_alarm:
+    -
+      args:
+        meter_name: "ram_util"
+        threshold: 10.0
+        type: "threshold"
+        statistic: "avg"
+        alarm_actions: ["http://25.0.0.2:8776/alarm"]
+        ok_actions: ["http://25.0.0.2:8776/ok"]
+        insufficient_data_actions: ["http://25.0.0.2:8776/notok"]
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 1
+
+  CeilometerAlarms.list_alarms:
+    -
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+
+  CeilometerEvents.create_user_and_get_event:
+    -
+      runner:
+        type: "constant"
+        times: 5
+        concurrency: 1
+
+
+  CeilometerEvents.create_user_and_list_events:
+    -
+      runner:
+        type: "constant"
+        times: 5
+        concurrency: 1
+
+  CeilometerEvents.create_user_and_list_event_types:
+    -
+      runner:
+        type: "constant"
+        times: 5
+        concurrency: 1
+
+
+  CeilometerMeters.list_meters:
+    -
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 1
+      context:
+        ceilometer:
+          counter_name: "benchmark_meter"
+          counter_type: "gauge"
+          counter_unit: "%"
+          counter_volume: 10
+          resources_per_tenant: 10
+          samples_per_resource: 10
+          timestamp_interval: 10
+          metadata_list:
+            -
+              status: "active"
+              name: "rally benchmark on"
+              deleted: "false"
+            -
+              status: "terminated"
+              name: "rally benchmark off"
+              deleted: "true"
+      args:
+        metadata_query:
+          status: "terminated"
+
+  CeilometerStats.create_meter_and_get_stats:
+    -
+      args:
+        user_id: "user-id"
+        resource_id: "resource-id"
+        counter_volume: 1.0
+        counter_unit: ""
+        counter_type: "cumulative"
+      runner:
+        type: "constant"
+        times: 5
+        concurrency: 1
+
+  CeilometerMeters.list_matched_meters:
+    -
+      runner:
+        type: "constant"
+        times: 1
+        concurrency: 1
+      args:
+        filter_by_user_id: false
+        filter_by_project_id: true
+        filter_by_resource_id: false
+
+  CeilometerMeters.list_matched_meters:
+    -
+      runner:
+        type: "constant"
+        times: 5
+        concurrency: 1
+      context:
+        ceilometer:
+          counter_name: "benchmark_meter"
+          counter_type: "gauge"
+          counter_unit: "%"
+          counter_volume: 100
+          resources_per_tenant: 10
+          samples_per_resource: 10
+          timestamp_interval: 10
+          metadata_list:
+            -
+              status: "active"
+              name: "rally benchmark on"
+              deleted: "false"
+            -
+              status: "terminated"
+              name: "rally benchmark off"
+              deleted: "true"
+      args:
+        filter_by_user_id: false
+        filter_by_project_id: true
+        filter_by_resource_id: false
+
+  CeilometerMeters.list_meters:
+    -
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 1
+
+  CeilometerResource.list_resources:
+     -
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 1
+      context:
+        ceilometer:
+          counter_name: "benchmark_meter"
+          counter_type: "gauge"
+          counter_unit: "%"
+          counter_volume: 10
+          resources_per_tenant: 10
+          samples_per_resource: 10
+          timestamp_interval: 10
+          metadata_list:
+            -
+              status: "active"
+              name: "rally benchmark on"
+              deleted: "false"
+            -
+              status: "terminated"
+              name: "rally benchmark off"
+              deleted: "true"
+      args:
+        metadata_query:
+          status: "terminated"
+
+  CeilometerResource.get_tenant_resources:
+    -
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 1
+      context:
+        ceilometer: 
+         counter_name: "cpu_util"
+         counter_type: "gauge"
+         counter_unit: "instance"
+         counter_volume: 1.0
+         resources_per_tenant: 3
+         samples_per_resource: 5
+
+  CeilometerResource.list_matched_resources:
+     -
+      runner:
+        type: "constant"
+        times: 1
+        concurrency: 1
+      args:
+        filter_by_user_id: true
+        filter_by_project_id: true
+        metadata_query:
+          status: "terminated"
+
+  CeilometerResource.list_matched_resources:
+     -
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 1
+      context:
+        ceilometer:
+          counter_name: "benchmark_meter"
+          counter_type: "gauge"
+          counter_unit: "%"
+          counter_volume: 100
+          resources_per_tenant: 10
+          samples_per_resource: 10
+          timestamp_interval: 10
+          metadata_list:
+            -
+              status: "active"
+              name: "rally benchmark on"
+              deleted: "false"
+            -
+              status: "terminated"
+              name: "rally benchmark off"
+              deleted: "true"
+      args:
+        filter_by_user_id: false
+        filter_by_project_id: true
+        filter_by_resource_id: false
+#       metadata_query:
+#         status: "terminated"
+#       start_time: "2015-11-01"
+
+  CeilometerResource.list_resources:
+    -
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 1
+
+  CeilometerQueries.create_and_query_samples:
+    -
+      args:
+        filter: {"=": {"counter_unit": "instance"}}
+        orderby: !!null
+        limit: 10
+        counter_name: "coffee"
+        counter_type: "gauge"
+        counter_unit: "guage"
+        counter_volume: 1.0
+        resource_id: "resource_id"
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 1
+
+  CeilometerSamples.list_samples:
+    -
+      runner:
+        type: "constant"
+        times: 5
+        concurrency: 1
+      context:
+        ceilometer:
+          counter_name: "cpu_util"
+          counter_type: "gauge"
+          counter_unit: "instance"
+          counter_volume: 1.0
+          resources_per_tenant: 3
+          samples_per_resource: 3
+
+  CeilometerTraits.create_user_and_list_trait_descriptions:
+    -
+      runner:
+        type: "constant"
+        times: 5
+        concurrency: 1
+
+
+  CeilometerTraits.create_user_and_list_traits:
+    -
+      runner:
+        type: "constant"
+        times: 5
+        concurrency: 1
+
+
   CinderVolumes.create_and_delete_snapshot:
     -
       args:
@@ -84,7 +469,7 @@
         detailed: True
       runner:
         type: "constant"
-        times: 10
+        times: 20
         concurrency: 2
       context:
         users:
@@ -98,9 +483,9 @@
       args:
           size: 10
           image:
-            name: "TestVM"
+            name: "{{image_name}}"
           flavor:
-            name: "m1.tiny"
+            name: "{{flavor_name}}"
       runner:
         type: "constant"
         times: 5
@@ -109,32 +494,6 @@
         users:
           tenants: 1
           users_per_tenant: 1
-
-  CinderVolumes.create_and_delete_volume:
-    -
-      args:
-        size: 1
-        volume_type: "eqlx"
-      runner:
-        type: "constant"
-        times: 3
-        concurrency: 2
-      context:
-        users:
-          tenants: 2
-          users_per_tenant: 2
-    -
-      args:
-        size: 1
-        volume_type: "rbd"
-      runner:
-        type: "constant"
-        times: 3
-        concurrency: 2
-      context:
-        users:
-          tenants: 2
-          users_per_tenant: 2
 
   CinderVolumes.create_and_extend_volume:
     -
@@ -143,19 +502,20 @@
         new_size: 1
       runner:
         type: "constant"
-        times: 5
+        times: 10
         concurrency: 1
       context:
         users:
           tenants: 1
           users_per_tenant: 1
+
     -
       args:
         size: 1
         new_size: 5
       runner:
         type: "constant"
-        times: 5
+        times: 10
         concurrency: 1
       context:
         users:
@@ -169,8 +529,8 @@
         detailed: True
       runner:
         type: "constant"
-        times: 3
-        concurrency: 1
+        times: 10
+        concurrency: 2
       context:
         users:
           tenants: 1
@@ -182,26 +542,11 @@
         size: 1
         force: false
         container_format: "bare"
-        disk_format: "qcow2"
-        do_delete: true
-      runner:
-        type: "constant"
-        times: 5
-        concurrency: 1
-      context:
-        users:
-          tenants: 1
-          users_per_tenant: 1
-    -
-      args:
-        size: 1
-        force: false
-        container_format: "bare"
         disk_format: "raw"
         do_delete: true
       runner:
         type: "constant"
-        times: 5
+        times: 10
         concurrency: 1
       context:
         users:
@@ -212,26 +557,12 @@
     -
       args:
         size: 1
-        volume_type: "eqlx"
-        image:
-            name: "TestVM"
-      runner:
-        type: "constant"
-        times: 5
-        concurrency: 2
-      context:
-        users:
-          tenants: 1
-          users_per_tenant: 1
-    -
-      args:
-        size: 1
         volume_type: "rbd"
         image:
-            name: "TestVM"
+            name: "{{image_name}}"
       runner:
         type: "constant"
-        times: 5
+        times: 10
         concurrency: 2
       context:
         users:
@@ -244,7 +575,7 @@
         size: 5
       runner:
         type: "constant"
-        times: 2
+        times: 10
         concurrency: 2
       context:
         users:
@@ -252,25 +583,13 @@
           users_per_tenant: 1
         volumes:
           size: 1
+
     -
       args:
         size: 5
       runner:
         type: "constant"
-        times: 2
-        concurrency: 2
-      context:
-        users:
-          tenants: 1
-          users_per_tenant: 1
-        volumes:
-          size: 5
-    -
-      args:
-        size: 1
-      runner:
-        type: "constant"
-        times: 2
+        times: 10
         concurrency: 2
       context:
         users:
@@ -279,26 +598,95 @@
         volumes:
           size: 5
 
-  CinderVolumes.create_volume:
     -
       args:
         size: 1
-        volume_type: "eqlx"
       runner:
         type: "constant"
-        times: 5
+        times: 10
         concurrency: 2
       context:
         users:
           tenants: 1
           users_per_tenant: 1
+        volumes:
+          size: 5
+
+  CinderVolumes.create_nested_snapshots_and_attach_volume:
+    -
+      args:
+          size:
+              min: 1
+              max: 5
+          nested_level:
+              min: 1
+              max: 10
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 1
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        servers:
+          image:
+            name: "{{image_name}}"
+          flavor:
+            name: "{{flavor_name}}"
+          servers_per_tenant: 1
+
+  CinderVolumes.create_snapshot_and_attach_volume:
+    -
+      args:
+          volume_type: false
+          size:
+              min: 1
+              max: 5
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        servers:
+          image:
+            name: "{{image_name}}"
+          flavor:
+            name: "{{flavor_name}}"
+          servers_per_tenant: 2
+    -
+      args:
+          volume_type: true
+          size:
+              min: 1
+              max: 5
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        servers:
+          image:
+            name: "{{image_name}}"
+          flavor:
+            name: "{{flavor_name}}"
+          servers_per_tenant: 2
+
+
+  CinderVolumes.create_volume:
     -
       args:
         size: 1
-        volume_type: "rbd"
+        volume_type: ""
       runner:
         type: "constant"
-        times: 5
+        times: 20
         concurrency: 2
       context:
         users:
@@ -324,7 +712,7 @@
   GlanceImages.create_and_delete_image:
     -
       args:
-        image_location: "http://download.cirros-cloud.net/0.3.1/cirros-0.3.1-x86_64-disk.img"
+        image_location: "/home/images/cirros-0.3.4-x86_64-raw"
         container_format: "bare"
         disk_format: "raw"
       runner:
@@ -339,20 +727,7 @@
   GlanceImages.create_and_list_image:
     -
       args:
-        image_location: "/root/images/cirros-0.3.4-x86_64.img"
-        container_format: "bare"
-        disk_format: "raw"
-      runner:
-        type: "constant"
-        times: 10
-        concurrency: 1
-      context:
-        users:
-          tenants: 1
-          users_per_tenant: 1
-    -
-      args:
-        image_location: "http://download.cirros-cloud.net/0.3.1/cirros-0.3.1-x86_64-disk.img"
+        image_location: "/home/images/cirros-0.3.4-x86_64-raw"
         container_format: "bare"
         disk_format: "raw"
       runner:
@@ -367,36 +742,20 @@
   GlanceImages.create_image_and_boot_instances:
     -
       args:
-        image_location: "http://download.cirros-cloud.net/0.3.1/cirros-0.3.1-x86_64-disk.img"
+        image_location: "/home/images/cirros-0.3.4-x86_64-raw"
         container_format: "bare"
         disk_format: "raw"
         flavor:
-            name: "m1.tiny"
+            name: "{{flavor_name}}"
         number_instances: 2
       runner:
         type: "constant"
         times: 10
-        concurrency: 1
+        concurrency: 2
       context:
         users:
-          tenants: 2
-          users_per_tenant: 2
-
-  GlanceImages.list_images:
-    -
-      runner:
-        type: "constant"
-        times: 10
-        concurrency: 1
-      context:
-        users:
-          tenants: 2
-          users_per_tenant: 2
-        images:
-          image_url: "http://download.cirros-cloud.net/0.3.1/cirros-0.3.1-x86_64-disk.img"
-          image_type: "raw"
-          image_container: "bare"
-          images_per_tenant: 4
+          tenants: 1
+          users_per_tenant: 1
 
   KeystoneBasic.get_entities:
     -
@@ -492,120 +851,86 @@
         times: 100
         concurrency: 10
 
-  NovaKeypair.boot_and_delete_server_with_keypair:
+  KeystoneBasic.create_user_set_enabled_and_delete:
     -
       args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "TestVM"
+        enabled: true
       runner:
         type: "constant"
-        times: 5
-        concurrency: 2
+        times: 100
+        concurrency: 10
+    -
+      args:
+        enabled: false
+      runner:
+        type: "constant"
+        times: 100
+        concurrency: 10
+
+  KeystoneBasic.create_user_update_password:
+    -
+      args: {}
+      runner:
+        type: "constant"
+        times: 100
+        concurrency: 10
+
+  KeystoneBasic.add_and_remove_user_role:
+    -
+      runner:
+        type: "constant"
+        times: 100
+        concurrency: 10
       context:
         users:
-          tenants: 2
-          users_per_tenant: 1
-        network:
-          start_cidr: "100.1.0.0/26"
+          tenants: 3
+          users_per_tenant: 2
 
-  NovaKeypair.create_and_delete_keypair:
+  KeystoneBasic.create_add_and_list_user_roles:
     -
+      runner:
+        type: "constant"
+        times: 100
+        concurrency: 10
+      context:
+        users:
+          tenants: 3
+          users_per_tenant: 2
+
+  KeystoneBasic.create_and_delete_role:
+    -
+      runner:
+        type: "constant"
+        times: 100
+        concurrency: 10
+
+  NeutronLoadbalancerV1.create_and_delete_healthmonitors:
+    -
+      args:
+        healthmonitor_create_args: 
+          delay: 30
+          max_retries: 5
+          type: "TCP"
+          timeout: 30
       runner:
         type: "constant"
         times: 10
         concurrency: 2
-      context:
-        users:
-          tenants: 3
-          users_per_tenant: 2
-
-  NovaKeypair.create_and_list_keypairs:
-    -
-      runner:
-        type: "constant"
-        times: 10
-        concurrency: 2
-      context:
-        users:
-          tenants: 3
-          users_per_tenant: 2
-
-  NovaSecGroup.boot_and_delete_server_with_secgroups:
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "TestVM"
-        security_group_count: 2
-        rules_per_security_group: 10
-      runner:
-        type: "constant"
-        times: 4
-        concurrency: 1
-      context:
-        users:
-          tenants: 3
-          users_per_tenant: 2
-        network:
-          start_cidr: "100.1.0.0/26"
-
-  NovaSecGroup.create_and_delete_secgroups:
-    -
-      args:
-        security_group_count: 2
-        rules_per_security_group: 10
-      runner:
-        type: "constant"
-        times: 4
-        concurrency: 1
-      context:
-        users:
-          tenants: 1
-          users_per_tenant: 1
-
-  NovaSecGroup.create_and_list_secgroups:
-    -
-      args:
-        security_group_count: 2
-        rules_per_security_group: 0
-      runner:
-        type: "constant"
-        times: 4
-        concurrency: 1
-      context:
-        users:
-          tenants: 1
-          users_per_tenant: 1
-    -
-      args:
-        security_group_count: 2
-        rules_per_security_group: 10
-      runner:
-        type: "constant"
-        times: 4
-        concurrency: 1
       context:
         users:
           tenants: 1
           users_per_tenant: 1
         quotas:
-          nova:
-              ram: -1
-              instances: 5
+          neutron:
+            health_monitor: -1
 
-  NovaServers.boot_and_delete_server:
+  NeutronLoadbalancerV1.create_and_delete_pools:
     -
       args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "TestVM"
-        force_delete: false
-        min_sleep: 5
-        max_sleep: 20
+        pool_create_args:
+          lb_method: "ROUND_ROBIN"
+          protocol: "TCP"
+          name: "rally_test_pool"
       runner:
         type: "constant"
         times: 10
@@ -614,156 +939,20 @@
         users:
           tenants: 1
           users_per_tenant: 1
+        network: {}
+        quotas:
+          neutron:
+            network: -1
+            subnet: -1
+            pool: -1
 
-  NovaServers.boot_and_list_server:
+  NeutronLoadbalancerV1.create_and_delete_vips:
     -
       args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "TestVM"
-        detailed: True
-      runner:
-        type: "constant"
-        times: 50
-        concurrency: 2
-      context:
-        users:
-          tenants: 1
-          users_per_tenant: 1
-
-  NovaServers.boot_and_live_migrate_server:
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "TestVM"
-        block_migration: false
-      runner:
-        type: "constant"
-        times: 10
-        concurrency: 2
-      context:
-        users:
-            tenants: 1
-            users_per_tenant: 1
-
-  NovaServers.boot_and_migrate_server:
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "TestVM"
-      runner:
-        type: "constant"
-        times: 10
-        concurrency: 2
-      context:
-        users:
-            tenants: 1
-            users_per_tenant: 1
-
-  NovaServers.boot_and_rebuild_server:
-    -
-      args:
-        flavor:
-            name: "m1.small"
-        from_image:
-            name: "TestVM"
-        to_image:
-            name: "TestVM"
-      runner:
-        type: "constant"
-        times: 5
-        concurrency: 2
-      context:
-        users:
-            tenants: 1
-            users_per_tenant: 1
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        from_image:
-            name: "TestVM"
-        to_image:
-            name: "TestVM"
-      runner:
-        type: "constant"
-        times: 5
-        concurrency: 2
-      context:
-        users:
-            tenants: 1
-            users_per_tenant: 1
-
-  NovaServers.boot_and_bounce_server:
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "TestVM"
-        force_delete: false
-        actions:
-          -
-            hard_reboot: 1
-      runner:
-        type: "constant"
-        times: 10
-        concurrency: 2
-      context:
-        users:
-          tenants: 3
-          users_per_tenant: 2
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "TestVM"
-        force_delete: false
-        actions:
-          -
-            soft_reboot: 1
-      runner:
-        type: "constant"
-        times: 10
-        concurrency: 2
-      context:
-        users:
-          tenants: 3
-          users_per_tenant: 2
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "TestVM"
-        force_delete: false
-        actions:
-          -
-            stop_start: 1
-      runner:
-        type: "constant"
-        times: 10
-        concurrency: 2
-      context:
-        users:
-          tenants: 3
-          users_per_tenant: 2
-
-  NovaServers.boot_server_from_volume_and_delete:
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "TestVM"
-        volume_size: 10
-        force_delete: false
+        vip_create_args:
+          protocol_port: 80
+          protocol: "HTTP"
+          name: "rally_test_vip"
       runner:
         type: "constant"
         times: 10
@@ -772,16 +961,43 @@
         users:
           tenants: 1
           users_per_tenant: 1
+        network: {}
+        lbaas:
+          pool: {}
+        quotas:
+          neutron:
+            network: -1
+            subnet: -1
+            pool: -1
+            vip: -1
 
-  NovaServers.boot_server_from_volume:
+  NeutronLoadbalancerV1.create_and_list_healthmonitors:
     -
       args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "TestVM"
-        volume_size: 10
-        volume_type: "eqlx"
+        healthmonitor_create_args:
+          delay: 30
+          max_retries: 5
+          type: "TCP"
+          timeout: 30
+      runner:
+        type: "constant"
+        times: 100
+        concurrency: 10
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            health_monitor: -1
+
+  NeutronLoadbalancerV1.create_and_list_pools:
+    -
+      args:
+        pool_create_args:
+          lb_method: "ROUND_ROBIN"
+          protocol: "TCP"
+          name: "rally_test_pool"
       runner:
         type: "constant"
         times: 10
@@ -790,14 +1006,20 @@
         users:
           tenants: 1
           users_per_tenant: 1
+        network: {}
+        quotas:
+          neutron:
+            network: -1
+            subnet: -1
+            pool: -1
+
+  NeutronLoadbalancerV1.create_and_list_vips:
     -
       args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "TestVM"
-        volume_size: 10
-        volume_type: "rbd"
+        vip_create_args:
+          protocol_port: 80
+          protocol: "HTTP"
+          name: "rally_test_vip"
       runner:
         type: "constant"
         times: 10
@@ -806,91 +1028,27 @@
         users:
           tenants: 1
           users_per_tenant: 1
+        network: {}
+        quotas:
+          neutron:
+            network: -1
+            subnet: -1
+            pool: -1
+            vip: -1
 
-  NovaServers.boot_server_attach_created_volume_and_live_migrate:
+  NeutronLoadbalancerV1.create_and_update_healthmonitors:
     -
       args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "TestVM"
-        size: 10
-        block_migration: false
-        create_volume_kwargs:
-            volume_type: "eqlx"
-      runner:
-        type: "constant"
-        times: 5
-        concurrency: 1
-      context:
-        users:
-            tenants: 2
-            users_per_tenant: 2
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "TestVM"
-        size: 10
-        block_migration: false
-        create_volume_kwargs:
-            volume_type: "rbd"
-      runner:
-        type: "constant"
-        times: 5
-        concurrency: 1
-      context:
-        users:
-          tenants: 2
-          users_per_tenant: 2
-
-  NovaServers.boot_server_from_volume_and_live_migrate:
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "TestVM"
-        block_migration: false
-        volume_size: 10
-        force_delete: false
-        volume_type: "eqlx"
-      runner:
-        type: "constant"
-        times: 10
-        concurrency: 2
-      context:
-        users:
-            tenants: 1
-            users_per_tenant: 1
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "TestVM"
-        block_migration: false
-        volume_size: 10
-        force_delete: false
-        volume_type: "rbd"
-      runner:
-        type: "constant"
-        times: 10
-        concurrency: 2
-      context:
-        users:
-            tenants: 1
-            users_per_tenant: 1
-
-  NovaServers.snapshot_server:
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "TestVM"
-        force_delete: false
+        healthmonitor_create_args:
+          delay: 20
+          max_retries: 3
+          type: "PING"
+          timeout: 10
+        healthmonitor_update_args:
+          delay: 30
+          max_retries: 5
+          type: "TCP"
+          timeout: 30
       runner:
         type: "constant"
         times: 10
@@ -899,50 +1057,21 @@
         users:
           tenants: 1
           users_per_tenant: 1
+        quotas:
+          neutron:
+            health_monitor: -1
 
-  NovaServers.boot_server:
+  NeutronLoadbalancerV1.create_and_update_pools:
     -
       args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "TestVM"
-      runner:
-        type: "constant"
-        times: 20
-        concurrency: 1
-      context:
-        users:
-            tenants: 1
-            users_per_tenant: 1
-
-  NovaServers.list_servers:
-    -
-      args:
-        detailed: True
-      runner:
-        type: "constant"
-        times: 50
-        concurrency: 2
-      context:
-        users:
-          tenants: 1
-          users_per_tenant: 1
-        servers:
-          flavor:
-              name: "m1.tiny"
-          image:
-              name: "TestVM"
-          servers_per_tenant: 2
-
-  NovaServers.pause_and_unpause_server:
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "TestVM"
-        force_delete: false
+        pool_create_args:
+          lb_method: "ROUND_ROBIN"
+          protocol: "TCP"
+          name: "rally_old_pool"
+        pool_update_args:
+          lb_method: "ROUND_ROBIN"
+          protocol: "TCP"
+          name: "rally_new_pool"
       runner:
         type: "constant"
         times: 10
@@ -951,53 +1080,24 @@
         users:
           tenants: 1
           users_per_tenant: 1
+        network: {}
+        quotas:
+          neutron:
+            network: -1
+            subnet: -1
+            pool: -1
 
-  NovaServers.resize_server:
+  NeutronLoadbalancerV1.create_and_update_vips:
     -
       args:
-        flavor:
-            name: "m1.small"
-        image:
-            name: "TestVM"
-        to_flavor:
-            name: "m1.tiny"
-        confirm: true
-        force_delete: false
-      runner:
-        type: "constant"
-        times: 10
-        concurrency: 5
-      context:
-        users:
-          tenants: 1
-          users_per_tenant: 1
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "TestVM"
-        to_flavor:
-            name: "m1.small"
-        confirm: true
-        force_delete: false
-      runner:
-        type: "constant"
-        times: 10
-        concurrency: 5
-      context:
-        users:
-          tenants: 1
-          users_per_tenant: 1
-
-  NovaServers.suspend_and_resume_server:
-    -
-      args:
-        flavor:
-            name: "m1.tiny"
-        image:
-            name: "TestVM"
-        force_delete: false
+        vip_create_args:
+          protocol_port: 80
+          protocol: "HTTP"
+          name: "rally_old_vip"
+        vip_update_args:
+          protocol_port: 80
+          protocol: "HTTP"
+          name: "rally_new_vip"
       runner:
         type: "constant"
         times: 10
@@ -1006,6 +1106,13 @@
         users:
           tenants: 1
           users_per_tenant: 1
+        network: {}
+        quotas:
+          neutron:
+            network: -1
+            subnet: -1
+            pool: -1
+            vip: -1
 
   NeutronNetworks.create_and_delete_networks:
     -
@@ -1191,6 +1298,91 @@
             subnet: -1
             router: -1
 
+  NeutronNetworks.create_and_delete_floating_ips:
+    -
+      args:
+        floating_network: "net04_ext"
+        floating_ip_args: {}
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            floatingip: -1
+
+  NeutronSecurityGroup.create_and_delete_security_groups:
+    -
+      args:
+        security_group_create_args: {}
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            security_group: -1
+
+  NeutronNetworks.create_and_list_floating_ips:
+    -
+      args:
+        floating_network: "net04_ext"
+        floating_ip_args: {}
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            floatingip: -1
+
+  NeutronSecurityGroup.create_and_list_security_groups:
+    -
+      args:
+        security_group_create_args: {}
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            security_group: -1
+
+  NeutronSecurityGroup.create_and_update_security_groups:
+    -
+      args:
+        security_group_create_args:
+          name: "rally_old_security_group"
+        security_group_update_args:
+          name: "rally_new_security_group"
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            security_group: -1
+
   NeutronNetworks.create_and_delete_subnets:
     -
       args:
@@ -1254,67 +1446,613 @@
             network: -1
             subnet: -1
 
-  Quotas.cinder_update_and_delete:
+  NovaKeypair.create_and_delete_keypair:
     -
-      args:
-        max_quota: 1024
       runner:
         type: "constant"
         times: 10
         concurrency: 2
       context:
         users:
-          tenants: 3
-          users_per_tenant: 2
+          tenants: 1
+          users_per_tenant: 1
 
-  Quotas.cinder_update:
+  NovaKeypair.create_and_list_keypairs:
     -
-      args:
-        max_quota: 1024
       runner:
         type: "constant"
         times: 10
         concurrency: 2
       context:
         users:
-          tenants: 3
-          users_per_tenant: 2
+          tenants: 1
+          users_per_tenant: 1
 
-  Quotas.neutron_update:
+  NovaSecGroup.create_and_delete_secgroups:
     -
       args:
-        max_quota: 1024
+        security_group_count: 2
+        rules_per_security_group: 10
       runner:
         type: "constant"
         times: 10
         concurrency: 2
       context:
         users:
-          tenants: 3
-          users_per_tenant: 2
+          tenants: 1
+          users_per_tenant: 1
 
-  Quotas.nova_update_and_delete:
+  NovaSecGroup.create_and_list_secgroups:
     -
       args:
-        max_quota: 1024
+        security_group_count: 2
+        rules_per_security_group: 0
       runner:
         type: "constant"
         times: 10
         concurrency: 2
       context:
         users:
-          tenants: 3
-          users_per_tenant: 2
+          tenants: 1
+          users_per_tenant: 1
 
-  Quotas.nova_update:
+  NovaSecGroup.create_and_list_secgroups:
     -
       args:
-        max_quota: 1024
+        security_group_count: 2
+        rules_per_security_group: 9
+      runner:
+        type: "constant"
+        times: 4
+        concurrency: 1
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          nova:
+              instances: 5
+
+  NovaSecGroup.create_and_update_secgroups:
+    -
+      args:
+        security_group_count: 9
       runner:
         type: "constant"
         times: 10
         concurrency: 2
       context:
         users:
-          tenants: 3
-          users_per_tenant: 2
+          tenants: 1
+          users_per_tenant: 1
+
+  NovaServers.boot_and_associate_floating_ip:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        auto_assign_nic: True
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          users_per_tenant: 1
+          tenants: 1
+        network: {}
+
+  NovaServers.boot_and_live_migrate_server:
+    -
+      args:
+        flavor:
+          name: "{{flavor_name}}"
+        image:
+          name: "{{flavor_name}}"
+        block_migration: true
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  NovaServers.boot_and_delete_multiple_servers:
+    -
+      args:
+        image:
+          name: "{{image_name}}"
+        flavor:
+          name: "{{flavor_name}}"
+        count: 5
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 1
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  NovaKeypair.boot_and_delete_server_with_keypair:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        auto_assign_nic: True
+      runner:
+        type: "constant"
+        times: 5
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        network:
+          start_cidr: "100.1.0.0/26"
+
+  NovaSecGroup.boot_and_delete_server_with_secgroups:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        auto_assign_nic: True
+        security_group_count: 9
+        rules_per_security_group: 5
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        network:
+          start_cidr: "100.1.0.0/26"
+
+  NovaServers.boot_and_delete_server:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        auto_assign_nic: True
+        force_delete: false
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  NovaServers.boot_and_get_console_output:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  NovaServers.boot_and_list_server:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        detailed: True
+        auto_assign_nic: True
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  NovaServers.boot_and_live_migrate_server:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        block_migration: false
+        auto_assign_nic: True
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+            tenants: 1
+            users_per_tenant: 1
+
+  NovaServers.boot_and_migrate_server:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        auto_assign_nic: True
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+            tenants: 1
+            users_per_tenant: 1
+
+  NovaServers.boot_and_rebuild_server:
+    {% for flavor_name in ( "m1.tiny", "m1.small") %}
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        from_image:
+            name: "cirros-0.3.4-x86_64"
+        to_image:
+            name: "ubuntu-14.04-x86_64"
+      runner:
+        type: "constant"
+        times: 1
+        concurrency: 1
+      context:
+        users:
+            tenants: 1
+            users_per_tenant: 1
+    {% endfor %}
+
+  NovaServers.boot_and_show_server:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  NovaServers.boot_and_bounce_server:
+    -
+      args:
+        force_delete: false
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        actions:
+          -
+            hard_reboot: 1
+          -
+            soft_reboot: 1
+          -
+            stop_start: 1
+          -
+            rescue_unrescue: 1
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  NovaServers.boot_server_from_volume_and_delete:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        volume_size: 10
+        force_delete: false
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  NovaServers.boot_server_from_volume_and_resize:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        to_flavor:
+            name: "m1.small"
+        confirm: true
+        volume_size: 1
+        force_delete: false
+        do_delete: true
+        boot_server_kwargs: {}
+        create_volume_kwargs: {}
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  NovaServers.boot_server_from_volume:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        volume_size: 1
+        volume_type: ""
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  NovaServers.boot_lock_unlock_and_delete:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+      runner:
+        type: "constant"
+        times: 1
+        concurrency: 1
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  NovaServers.boot_server_attach_created_volume_and_live_migrate:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        size: 1
+        block_migration: false
+        create_volume_kwargs:
+            volume_type: ""
+        boot_server_kwargs:
+            auto_assign_nic: True
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+            tenants: 1
+            users_per_tenant: 1
+
+  NovaServers.boot_server_attach_created_volume_and_resize:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        to_flavor:
+            name: "m1.small"
+        confirm: true
+        volume_size: 1
+        force_delete: false
+        do_delete: true
+        boot_server_kwargs: {}
+        create_volume_kwargs: {}
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  NovaServers.boot_server_from_volume_and_live_migrate:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        block_migration: false
+        volume_size: 1
+        force_delete: false
+        volume_type: ""
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+            tenants: 1
+            users_per_tenant: 1
+
+  NovaServers.snapshot_server:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        force_delete: false
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  NovaServers.boot_server:
+    -
+      {% for flavor_name in ( "m1.tiny", "m1.normal", "m1.medium" ) %}
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        auto_assign_nic: True
+      runner:
+        type: "constant"
+        times: 20
+        concurrency: 1
+      context:
+        users:
+            tenants: 1
+            users_per_tenant: 1
+      {% endfor %}
+
+  NovaHypervisors.list_hypervisors:
+    -
+      args:
+        detailed: True
+      runner:
+        type: "constant"
+        times: 20
+        concurrency: 2
+
+  NovaImages.list_images:
+    -
+      args:
+        detailed: True
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  NovaServers.list_servers:
+    -
+      args:
+        detailed: True
+      runner:
+        type: "constant"
+        times: 50
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        servers:
+          flavor:
+              name: "{{flavor_name}}"
+          image:
+              name: "{{image_name}}"
+          servers_per_tenant: 2
+
+  NovaServers.pause_and_unpause_server:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        force_delete: false
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  NovaServers.resize_server:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        to_flavor:
+            name: "m1.tiny"
+        confirm: true
+        force_delete: false
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 5
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  NovaServers.shelve_and_unshelve_server:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        force_delete: false
+      runner:
+        type: "constant"
+        times: 1
+        concurrency: 1
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  NovaServers.suspend_and_resume_server:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        force_delete: false
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1

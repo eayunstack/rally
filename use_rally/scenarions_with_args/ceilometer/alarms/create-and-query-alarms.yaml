@@ -14,9 +14,5 @@
          insufficient_data_actions: ["http://25.0.0.2:8776/notok"]
        runner:
          type: "constant"
-         times: 100
-         concurrency: 10
-       context:
-         users:
-           tenants: 2
-           users_per_tenant: 2
+         times: 10
+         concurrency: 2
