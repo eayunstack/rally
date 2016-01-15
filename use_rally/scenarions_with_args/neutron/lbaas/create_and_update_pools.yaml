@@ -2,13 +2,13 @@
   NeutronLoadbalancerV1.create_and_update_pools:
     -
       args:
-        pool_create_args: {}
+        pool_create_args:
           lb_method: "ROUND_ROBIN"
           protocol: "TCP"
           name: "rally_old_pool"
-        pool_update_args: {}
+        pool_update_args:
           lb_method: "ROUND_ROBIN"
-          protocol: "TCP"
+#          protocol: "TCP"
           name: "rally_new_pool"
       runner:
         type: "constant"

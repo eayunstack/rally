@@ -10,7 +10,7 @@
         healthmonitor_update_args:
           delay: 30
           max_retries: 5
-          type: "TCP"
+#          type: "TCP"
           timeout: 30
       runner:
         type: "constant"

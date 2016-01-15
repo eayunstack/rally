@@ -7,8 +7,8 @@
           protocol: "HTTP"
           name: "rally_old_vip"
         vip_update_args:
-          protocol_port: 80
-          protocol: "HTTP"
+#          protocol_port: 80
+#          protocol: "HTTP"
           name: "rally_new_vip"
       runner:
         type: "constant"

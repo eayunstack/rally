@@ -2,7 +2,7 @@
   NovaSecGroup.create_and_update_secgroups:
     -
       args:
-        security_group_count: 9
+        security_group_count: 5
       runner:
         type: "constant"
         times: 10

@@ -299,13 +299,6 @@
         filter_by_project_id: true
         filter_by_resource_id: false
 
-  CeilometerMeters.list_meters:
-    -
-      runner:
-        type: "constant"
-        times: 10
-        concurrency: 1
-
   CeilometerResource.list_resources:
      -
       runner:
@@ -393,13 +386,6 @@
 #         status: "terminated"
 #       start_time: "2015-11-01"
 
-  CeilometerResource.list_resources:
-    -
-      runner:
-        type: "constant"
-        times: 10
-        concurrency: 1
-
   CeilometerQueries.create_and_query_samples:
     -
       args:
@@ -477,6 +463,9 @@
           users_per_tenant: 1
         volumes:
           size: 1
+        quotas:
+          cinder:
+            snapshots: -1
 
   CinderVolumes.create_and_attach_volume:
     -
@@ -692,6 +681,9 @@
         users:
           tenants: 1
           users_per_tenant: 1
+        quotas:
+          cinder:
+            volumes: -1
 
   CinderVolumes.list_volumes:
     -
@@ -1047,7 +1039,6 @@
         healthmonitor_update_args:
           delay: 30
           max_retries: 5
-          type: "TCP"
           timeout: 30
       runner:
         type: "constant"
@@ -1070,7 +1061,6 @@
           name: "rally_old_pool"
         pool_update_args:
           lb_method: "ROUND_ROBIN"
-          protocol: "TCP"
           name: "rally_new_pool"
       runner:
         type: "constant"
@@ -1095,8 +1085,6 @@
           protocol: "HTTP"
           name: "rally_old_vip"
         vip_update_args:
-          protocol_port: 80
-          protocol: "HTTP"
           name: "rally_new_vip"
       runner:
         type: "constant"
@@ -1516,7 +1504,7 @@
   NovaSecGroup.create_and_update_secgroups:
     -
       args:
-        security_group_count: 9
+        security_group_count: 5
       runner:
         type: "constant"
         times: 10
@@ -1585,10 +1573,9 @@
             name: "{{flavor_name}}"
         image:
             name: "{{image_name}}"
-        auto_assign_nic: True
       runner:
         type: "constant"
-        times: 5
+        times: 20
         concurrency: 2
       context:
         users:
@@ -1604,8 +1591,7 @@
             name: "{{flavor_name}}"
         image:
             name: "{{image_name}}"
-        auto_assign_nic: True
-        security_group_count: 9
+        security_group_count: 5
         rules_per_security_group: 5
       runner:
         type: "constant"
@@ -1706,18 +1692,18 @@
             users_per_tenant: 1
 
   NovaServers.boot_and_rebuild_server:
-    {% for flavor_name in ( "m1.tiny", "m1.small") %}
+    {% for to_image in ( "ubuntu-14.04-x86_64", "TestVM") %}
     -
       args:
         flavor:
-            name: "{{flavor_name}}"
+            name: "m1.small"
         from_image:
-            name: "cirros-0.3.4-x86_64"
+            name: "{{image_name}}"
         to_image:
-            name: "ubuntu-14.04-x86_64"
+            name: "{{to_image}}"
       runner:
         type: "constant"
-        times: 1
+        times: 10
         concurrency: 1
       context:
         users:
@@ -1836,7 +1822,7 @@
             name: "{{image_name}}"
       runner:
         type: "constant"
-        times: 1
+        times: 20
         concurrency: 1
       context:
         users:
@@ -1928,7 +1914,7 @@
 
   NovaServers.boot_server:
     -
-      {% for flavor_name in ( "m1.tiny", "m1.normal", "m1.medium" ) %}
+      {% for flavor_name in ( "m1.tiny", "m1.normal" ) %}
       args:
         flavor:
             name: "{{flavor_name}}"
@@ -2011,7 +1997,7 @@
         image:
             name: "{{image_name}}"
         to_flavor:
-            name: "m1.tiny"
+            name: "m1.small"
         confirm: true
         force_delete: false
       runner:
@@ -2033,7 +2019,7 @@
         force_delete: false
       runner:
         type: "constant"
-        times: 1
+        times: 10
         concurrency: 1
       context:
         users:

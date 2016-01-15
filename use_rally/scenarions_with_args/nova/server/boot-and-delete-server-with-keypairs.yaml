@@ -8,7 +8,6 @@
             name: "{{flavor_name}}"
         image:
             name: "{{image_name}}"
-        auto_assign_nic: True
       runner:
         type: "constant"
         times: 5
