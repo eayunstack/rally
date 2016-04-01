@@ -1692,7 +1692,7 @@
             users_per_tenant: 1
 
   NovaServers.boot_and_rebuild_server:
-    {% for to_image in ( "ubuntu-14.04-x86_64", "TestVM") %}
+    {% for to_image in ( "fedora-20-x86_64", "cirros-0.3.4-x86_64") %}
     -
       args:
         flavor:
@@ -1914,7 +1914,7 @@
 
   NovaServers.boot_server:
     -
-      {% for flavor_name in ( "m1.tiny", "m1.normal" ) %}
+      {% for flavor_name in ( "m1.tiny", "m1.small" ) %}
       args:
         flavor:
             name: "{{flavor_name}}"
