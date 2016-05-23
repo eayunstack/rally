@@ -1,0 +1,21 @@
+{
+    "admin": {
+        "password": "abc123", 
+        "tenant_name": "rally", 
+        "username": "rally_admin"
+    }, 
+    "users": [
+        {
+             "username": "admin",
+             "password": "admin",
+             "tenant_name": "admin"
+        },
+    ],
+    "auth_url": "http://172.16.101.2:5000/v2.0/", 
+    "endpoint": "http://172.16.101.2:35357/v2.0", 
+    "endpoint_type": "internal",
+    "https_cacert": "", 
+    "https_insecure": false, 
+    "region_name": "RegionOne", 
+    "type": "ExistingCloud", 
+}
