@@ -1,0 +1,23 @@
+---
+  NovaServers.boot_from_volume_and_rebuild_server:
+    {% for flavor_name in ( "m1.tiny", "m1.small") %}
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        from_image:
+            name: "cirros-0.3.4-x86_64"
+        to_image:
+            name: "ubuntu-14.04-x86_64"
+        volume_size: 10
+        force_delete: false
+      runner:
+      runner:
+        type: "constant"
+        times: 1
+        concurrency: 1
+      context:
+        users:
+            tenants: 1
+            users_per_tenant: 1
+    {% endfor %}
