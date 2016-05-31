@@ -1,0 +1,13 @@
+---
+  NovaSecGroup.create_and_update_secgroups:
+    -
+      args:
+        security_group_count: 5
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1

@@ -1,0 +1,20 @@
+---
+  NeutronLoadbalancerV1.create_and_list_healthmonitors:
+    -
+      args:
+        healthmonitor_create_args:
+          delay: 30
+          max_retries: 5
+          type: "TCP"
+          timeout: 30
+      runner:
+        type: "constant"
+        times: 100
+        concurrency: 10
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            health_monitor: -1

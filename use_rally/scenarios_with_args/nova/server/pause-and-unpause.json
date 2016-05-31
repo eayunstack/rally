@@ -1,0 +1,26 @@
+{
+    "NovaServers.pause_and_unpause_server": [
+        {
+            "args": {
+                "flavor": {
+                    "name": "m1.tiny"
+                },
+                "image": {
+                    "name": "cirros-0.3.4-x86_64"
+                },
+                "force_delete": false
+            },
+            "runner": {
+                "type": "constant",
+                "times": 10,
+                "concurrency": 2
+            },
+            "context": {
+                "users": {
+                    "tenants": 1,
+                    "users_per_tenant": 1
+                }
+            }
+        }
+    ]
+}

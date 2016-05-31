@@ -1,0 +1,7 @@
+---
+    CeilometerAlarms.list_alarms:
+     -
+       runner:
+         type: "constant"
+         times: 10
+         concurrency: 2

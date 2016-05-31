@@ -1,0 +1,8 @@
+---
+  CeilometerEvents.create_user_and_get_event:
+    -
+      runner:
+        type: "constant"
+        times: 5
+        concurrency: 1
+

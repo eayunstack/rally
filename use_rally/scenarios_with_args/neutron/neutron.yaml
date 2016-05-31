@@ -1,0 +1,542 @@
+---
+  NeutronLoadbalancerV1.create_and_delete_healthmonitors:
+    -
+      args:
+        healthmonitor_create_args: 
+          delay: 30
+          max_retries: 5
+          type: "TCP"
+          timeout: 30
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            health_monitor: -1
+
+  NeutronLoadbalancerV1.create_and_delete_pools:
+    -
+      args:
+        pool_create_args:
+          lb_method: "ROUND_ROBIN"
+          protocol: "TCP"
+          name: "rally_test_pool"
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        network: {}
+        quotas:
+          neutron:
+            network: -1
+            subnet: -1
+            pool: -1
+
+  NeutronLoadbalancerV1.create_and_delete_vips:
+    -
+      args:
+        vip_create_args:
+          protocol_port: 80
+          protocol: "HTTP"
+          name: "rally_test_vip"
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        network: {}
+        lbaas:
+          pool: {}
+        quotas:
+          neutron:
+            network: -1
+            subnet: -1
+            pool: -1
+            vip: -1
+
+  NeutronLoadbalancerV1.create_and_list_healthmonitors:
+    -
+      args:
+        healthmonitor_create_args:
+          delay: 30
+          max_retries: 5
+          type: "TCP"
+          timeout: 30
+      runner:
+        type: "constant"
+        times: 100
+        concurrency: 10
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            health_monitor: -1
+
+  NeutronLoadbalancerV1.create_and_list_pools:
+    -
+      args:
+        pool_create_args:
+          lb_method: "ROUND_ROBIN"
+          protocol: "TCP"
+          name: "rally_test_pool"
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        network: {}
+        quotas:
+          neutron:
+            network: -1
+            subnet: -1
+            pool: -1
+
+  NeutronLoadbalancerV1.create_and_list_vips:
+    -
+      args:
+        vip_create_args:
+          protocol_port: 80
+          protocol: "HTTP"
+          name: "rally_test_vip"
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        network: {}
+        quotas:
+          neutron:
+            network: -1
+            subnet: -1
+            pool: -1
+            vip: -1
+
+  NeutronLoadbalancerV1.create_and_update_healthmonitors:
+    -
+      args:
+        healthmonitor_create_args:
+          delay: 20
+          max_retries: 3
+          type: "PING"
+          timeout: 10
+        healthmonitor_update_args:
+          delay: 30
+          max_retries: 5
+          type: "TCP"
+          timeout: 30
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            health_monitor: -1
+
+  NeutronLoadbalancerV1.create_and_update_pools:
+    -
+      args:
+        pool_create_args: {}
+          lb_method: "ROUND_ROBIN"
+          protocol: "TCP"
+          name: "rally_old_pool"
+        pool_update_args: {}
+          lb_method: "ROUND_ROBIN"
+          protocol: "TCP"
+          name: "rally_new_pool"
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        network: {}
+        quotas:
+          neutron:
+            network: -1
+            subnet: -1
+            pool: -1
+
+  NeutronLoadbalancerV1.create_and_update_vips:
+    -
+      args:
+        vip_create_args:
+          protocol_port: 80
+          protocol: "HTTP"
+          name: "rally_old_vip"
+        vip_update_args:
+          protocol_port: 80
+          protocol: "HTTP"
+          name: "rally_new_vip"
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        network: {}
+        quotas:
+          neutron:
+            network: -1
+            subnet: -1
+            pool: -1
+            vip: -1
+
+  NeutronNetworks.create_and_delete_networks:
+    -
+      args:
+        network_create_args: {}
+      runner:
+        type: "constant"
+        times: 20
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            network: -1
+
+  NeutronNetworks.create_and_list_networks:
+    -
+      args:
+        network_create_args: {
+            name: "coffee_test"
+        }
+      runner:
+        type: "constant"
+        times: 20
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            network: -1
+
+  NeutronNetworks.create_and_update_networks:
+    -
+      args:
+        network_create_args: {}
+        network_update_args:
+            admin_state_up: False
+            name: "_updated"
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 5
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            network: -1
+
+  NeutronNetworks.create_and_delete_ports:
+    -
+      args:
+        network_create_args: {}
+        port_create_args: {}
+        ports_per_network: 10
+      runner:
+        type: "constant"
+        times: 20
+        concurrency: 5
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            network: -1
+            port: -1
+
+  NeutronNetworks.create_and_list_ports:
+    -
+      args:
+        network_create_args: {}
+        port_create_args: {}
+        ports_per_network: 10
+      runner:
+        type: "constant"
+        times: 20
+        concurrency: 5
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            network: -1
+            port: -1
+
+  NeutronNetworks.create_and_update_ports:
+    -
+      args:
+        network_create_args: {}
+        port_create_args: {}
+        ports_per_network: 5
+        port_update_args:
+            admin_state_up: False
+            device_id: "dummy_id"
+            device_owner: "dummy_owner"
+            name: "_port_updated"
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 5
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            network: -1
+            port: -1
+
+  NeutronNetworks.create_and_delete_routers:
+    -
+      args:
+        network_create_args: {}
+        subnet_create_args: {}
+        subnet_cidr_start: "1.1.0.0/30"
+        subnets_per_network: 2
+        router_create_args: {}
+      runner:
+        type: "constant"
+        times: 30
+        concurrency: 5
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            network: -1
+            subnet: -1
+            router: -1
+
+  NeutronNetworks.create_and_list_routers:
+    -
+      args:
+        network_create_args: {}
+        subnet_create_args: {}
+        subnet_cidr_start: "1.1.0.0/30"
+        subnets_per_network: 2
+        router_create_args: {}
+      runner:
+        type: "constant"
+        times: 50
+        concurrency: 5
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            network: -1
+            subnet: -1
+            router: -1
+
+  NeutronNetworks.create_and_update_routers:
+    -
+      args:
+        network_create_args: {}
+        subnet_create_args: {}
+        subnet_cidr_start: "1.1.0.0/30"
+        subnets_per_network: 2
+        router_create_args: {}
+        router_update_args:
+            admin_state_up: False
+            name: "_router_updated"
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 5
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            network: -1
+            subnet: -1
+            router: -1
+
+  NeutronNetworks.create_and_delete_floating_ips:
+    -
+      args:
+        floating_network: "net04_ext"
+        floating_ip_args: {}
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            floatingip: -1
+
+  NeutronSecurityGroup.create_and_delete_security_groups:
+    -
+      args:
+        security_group_create_args: {}
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            security_group: -1
+
+  NeutronNetworks.create_and_list_floating_ips:
+    -
+      args:
+        floating_network: "net04_ext"
+        floating_ip_args: {}
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            floatingip: -1
+
+  NeutronSecurityGroup.create_and_list_security_groups:
+    -
+      args:
+        security_group_create_args: {}
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            security_group: -1
+
+  NeutronSecurityGroup.create_and_update_security_groups:
+    -
+      args:
+        security_group_create_args:
+          name: "rally_old_security_group"
+        security_group_update_args:
+          name: "rally_new_security_group"
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            security_group: -1
+
+  NeutronNetworks.create_and_delete_subnets:
+    -
+      args:
+        network_create_args: {}
+        subnet_create_args:
+        subnet_cidr_start: "1.1.0.0/24"
+        subnets_per_network: 2
+      runner:
+        type: "constant"
+        times: 30
+        concurrency: 5
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        quotas:
+          neutron:
+            network: -1
+            subnet: -1
+
+  NeutronNetworks.create_and_list_subnets:
+    -
+      args:
+        network_create_args: {}
+        subnet_create_args: {}
+        subnet_cidr_start: "1.1.0.0/30"
+        subnets_per_network: 2
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 5
+      context:
+        users:
+          tenants: 2
+          users_per_tenant: 2
+        quotas:
+          neutron:
+            network: -1
+            subnet: -1
+
+  NeutronNetworks.create_and_update_subnets:
+    -
+      args:
+        network_create_args: {}
+        subnet_create_args: {}
+        subnet_cidr_start: "1.4.0.0/16"
+        subnets_per_network: 2
+        subnet_update_args:
+            enable_dhcp: False
+            name: "_subnet_updated"
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 5
+      context:
+        users:
+          tenants: 5
+          users_per_tenant: 2
+        quotas:
+          neutron:
+            network: -1
+            subnet: -1

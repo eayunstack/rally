@@ -1,0 +1,370 @@
+---
+    CeilometerAlarms.create_alarm_and_get_history:
+     -
+       args:
+         meter_name: "ram_util"
+         threshold: 10.0
+         type: "threshold"
+         state: "ok"
+         statistic: "avg"
+         alarm_actions: ["http://25.0.0.2:8776/alarm"]
+         ok_actions: ["http://25.0.0.2:8776/ok"]
+         insufficient_data_actions: ["http://25.0.0.2:8776/notok"]
+       runner:
+         type: "constant"
+         times: 10
+         concurrency: 2
+
+    CeilometerAlarms.create_alarm:
+     -
+       args:
+         meter_name: "ram_util"
+         threshold: 10.0
+         type: "threshold"
+         statistic: "avg"
+         alarm_actions: ["http://25.0.0.2:8776/alarm"]
+         ok_actions: ["http://25.0.0.2:8776/ok"]
+         insufficient_data_actions: ["http://25.0.0.2:8776/notok"]
+       runner:
+         type: "constant"
+         times: 10
+         concurrency: 2
+
+    CeilometerAlarms.create_and_delete_alarm:
+     -
+       args:
+         meter_name: "ram_util"
+         threshold: 10.0
+         type: "threshold"
+         statistic: "avg"
+         alarm_actions: ["http://25.0.0.2:8776/alarm"]
+         ok_actions: ["http://25.0.0.2:8776/ok"]
+         insufficient_data_actions: ["http://25.0.0.2:8776/notok"]
+       runner:
+         type: "constant"
+         times: 10
+         concurrency: 1
+
+    CeilometerAlarms.create_and_list_alarm:
+     -
+       args:
+         meter_name: "ram_util"
+         threshold: 10.0
+         type: "threshold"
+         statistic: "avg"
+         alarm_actions: ["http://25.0.0.2:8776/alarm"]
+         ok_actions: ["http://25.0.0.2:8776/ok"]
+         insufficient_data_actions: ["http://25.0.0.2:8776/notok"]
+       runner:
+         type: "constant"
+         times: 10
+         concurrency: 1
+
+    CeilometerQueries.create_and_query_alarm_history:
+     -
+       args:
+         orderby: !!null
+         limit: !!null
+         meter_name: "ram_util"
+         threshold: 10.0
+         type: "threshold"
+         statistic: "avg"
+         alarm_actions: ["http://25.0.0.2:8776/alarm"]
+         ok_actions: ["http://25.0.0.2:8776/ok"]
+         insufficient_data_actions: ["http://25.0.0.2:8776/notok"]
+       runner:
+         type: "constant"
+         times: 1
+         concurrency: 1
+
+    CeilometerQueries.create_and_query_alarms:
+     -
+       args:
+         filter: {"and": [{"!=": {"state": "dummy_state"}},{"=": {"type": "threshold"}}]}
+         orderby: !!null
+         limit: 10
+         meter_name: "ram_util"
+         threshold: 10.0
+         type: "threshold"
+         statistic: "avg"
+         alarm_actions: ["http://25.0.0.2:8776/alarm"]
+         ok_actions: ["http://25.0.0.2:8776/ok"]
+         insufficient_data_actions: ["http://25.0.0.2:8776/notok"]
+       runner:
+         type: "constant"
+         times: 10
+         concurrency: 2
+
+    CeilometerAlarms.create_and_update_alarm:
+     -
+       args:
+         meter_name: "ram_util"
+         threshold: 10.0
+         type: "threshold"
+         statistic: "avg"
+         alarm_actions: ["http://25.0.0.2:8776/alarm"]
+         ok_actions: ["http://25.0.0.2:8776/ok"]
+         insufficient_data_actions: ["http://25.0.0.2:8776/notok"]
+       runner:
+         type: "constant"
+         times: 10
+         concurrency: 1
+
+    CeilometerAlarms.list_alarms:
+     -
+       runner:
+         type: "constant"
+         times: 10
+         concurrency: 2
+
+  CeilometerEvents.create_user_and_get_event:
+    -
+      runner:
+        type: "constant"
+        times: 5
+        concurrency: 1
+
+
+  CeilometerEvents.create_user_and_list_events:
+    -
+      runner:
+        type: "constant"
+        times: 5
+        concurrency: 1
+
+  CeilometerEvents.create_user_and_list_event_types:
+    -
+      runner:
+        type: "constant"
+        times: 5
+        concurrency: 1
+
+
+    CeilometerMeters.list_meters:
+     -
+       runner:
+         type: "constant"
+         times: 10
+         concurrency: 1
+       context:
+         ceilometer:
+           counter_name: "benchmark_meter"
+           counter_type: "gauge"
+           counter_unit: "%"
+           counter_volume: 10
+           resources_per_tenant: 10
+           samples_per_resource: 10
+           timestamp_interval: 10
+           metadata_list:
+             -
+               status: "active"
+               name: "rally benchmark on"
+               deleted: "false"
+             -
+               status: "terminated"
+               name: "rally benchmark off"
+               deleted: "true"
+       args:
+         metadata_query:
+           status: "terminated"
+
+    CeilometerStats.create_meter_and_get_stats:
+     -
+       args:
+         user_id: "user-id"
+         resource_id: "resource-id"
+         counter_volume: 1.0
+         counter_unit: ""
+         counter_type: "cumulative"
+       runner:
+         type: "constant"
+         times: 5
+         concurrency: 1
+
+    CeilometerMeters.list_matched_meters:
+     -
+       runner:
+         type: "constant"
+         times: 1
+         concurrency: 1
+       args:
+         filter_by_user_id: false
+         filter_by_project_id: true
+         filter_by_resource_id: false
+
+    CeilometerMeters.list_matched_meters:
+     -
+       runner:
+         type: "constant"
+         times: 5
+         concurrency: 1
+       context:
+         ceilometer:
+           counter_name: "benchmark_meter"
+           counter_type: "gauge"
+           counter_unit: "%"
+           counter_volume: 100
+           resources_per_tenant: 10
+           samples_per_resource: 10
+           timestamp_interval: 10
+           metadata_list:
+             -
+               status: "active"
+               name: "rally benchmark on"
+               deleted: "false"
+             -
+               status: "terminated"
+               name: "rally benchmark off"
+               deleted: "true"
+       args:
+         filter_by_user_id: false
+         filter_by_project_id: true
+         filter_by_resource_id: false
+
+    CeilometerMeters.list_meters:
+     -
+       runner:
+         type: "constant"
+         times: 10
+         concurrency: 1
+
+    CeilometerResource.list_resources:
+      -
+       runner:
+         type: "constant"
+         times: 10
+         concurrency: 1
+       context:
+         ceilometer:
+           counter_name: "benchmark_meter"
+           counter_type: "gauge"
+           counter_unit: "%"
+           counter_volume: 10
+           resources_per_tenant: 10
+           samples_per_resource: 10
+           timestamp_interval: 10
+           metadata_list:
+             -
+               status: "active"
+               name: "rally benchmark on"
+               deleted: "false"
+             -
+               status: "terminated"
+               name: "rally benchmark off"
+               deleted: "true"
+       args:
+         metadata_query:
+           status: "terminated"
+
+    CeilometerResource.get_tenant_resources:
+     -
+       runner:
+         type: "constant"
+         times: 10
+         concurrency: 1
+       context:
+         ceilometer: 
+          counter_name: "cpu_util"
+          counter_type: "gauge"
+          counter_unit: "instance"
+          counter_volume: 1.0
+          resources_per_tenant: 3
+          samples_per_resource: 5
+
+    CeilometerResource.list_matched_resources:
+      -
+       runner:
+         type: "constant"
+         times: 1
+         concurrency: 1
+       args:
+         filter_by_user_id: true
+         filter_by_project_id: true
+         metadata_query:
+           status: "terminated"
+
+    CeilometerResource.list_matched_resources:
+      -
+       runner:
+         type: "constant"
+         times: 10
+         concurrency: 1
+       context:
+         ceilometer:
+           counter_name: "benchmark_meter"
+           counter_type: "gauge"
+           counter_unit: "%"
+           counter_volume: 100
+           resources_per_tenant: 10
+           samples_per_resource: 10
+           timestamp_interval: 10
+           metadata_list:
+             -
+               status: "active"
+               name: "rally benchmark on"
+               deleted: "false"
+             -
+               status: "terminated"
+               name: "rally benchmark off"
+               deleted: "true"
+       args:
+         filter_by_user_id: false
+         filter_by_project_id: true
+         filter_by_resource_id: false
+#        metadata_query:
+#          status: "terminated"
+#        start_time: "2015-11-01"
+
+    CeilometerResource.list_resources:
+     -
+       runner:
+         type: "constant"
+         times: 10
+         concurrency: 1
+
+    CeilometerQueries.create_and_query_samples:
+     -
+       args:
+         filter: {"=": {"counter_unit": "instance"}}
+         orderby: !!null
+         limit: 10
+         counter_name: "coffee"
+         counter_type: "gauge"
+         counter_unit: "guage"
+         counter_volume: 1.0
+         resource_id: "resource_id"
+       runner:
+         type: "constant"
+         times: 10
+         concurrency: 1
+
+    CeilometerSamples.list_samples:
+     -
+       runner:
+         type: "constant"
+         times: 5
+         concurrency: 1
+       context:
+         ceilometer:
+           counter_name: "cpu_util"
+           counter_type: "gauge"
+           counter_unit: "instance"
+           counter_volume: 1.0
+           resources_per_tenant: 3
+           samples_per_resource: 3
+
+  CeilometerTraits.create_user_and_list_trait_descriptions:
+    -
+      runner:
+        type: "constant"
+        times: 5
+        concurrency: 1
+
+
+  CeilometerTraits.create_user_and_list_traits:
+    -
+      runner:
+        type: "constant"
+        times: 5
+        concurrency: 1
+

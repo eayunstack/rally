@@ -1,0 +1,15 @@
+{
+    "type": "ExistingCloud",
+    "auth_url": "http://25.0.0.2:5000/v2.0/",
+    "region_name": "RegionOne",
+    "endpoint_type": "public",
+    "use_public_urls": True,
+    "endpoint": "http://25.0.0.2:35357/v2.0",
+    "admin": {
+        "username": "rally_admin",
+        "password": "abc123",
+        "tenant_name": "rally"
+    },
+    "https_insecure": False,
+    "https_cacert": "",
+}

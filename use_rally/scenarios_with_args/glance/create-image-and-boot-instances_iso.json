@@ -1,0 +1,26 @@
+{
+    "GlanceImages.create_image_and_boot_instances": [
+        {
+            "args": {
+                "image_location": "/root/images/CentOS-7.0-1406-x86_64-DVD.iso"
+                "container_format": "bare",
+                "disk_format": "iso",
+                "flavor": {
+                    "name": "m1.small"
+                },
+                "number_instances": 2
+            },
+            "runner": {
+                "type": "constant",
+                "times": 10,
+                "concurrency": 1
+            },
+            "context": {
+                "users": {
+                    "tenants": 1,
+                    "users_per_tenant": 1
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,21 @@
+{% set flavor_name = flavor_name or "m1.tiny" %}
+{% set image_name = image_name or "cirros-0.3.4-x86_64" %}
+---
+  NovaServers.boot_server_from_volume_pause_and_unpause:
+    -
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        volume_size: 10
+        force_delete: false
+      runner:
+        type: "constant"
+        times: 10
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+

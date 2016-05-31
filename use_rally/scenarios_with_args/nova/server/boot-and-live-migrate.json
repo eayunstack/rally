@@ -1,0 +1,26 @@
+{
+   "NovaServers.boot_and_live_migrate_server": [
+        {
+            "args": {
+                "flavor": {
+                    "name": "m1.tiny"
+                },
+                "image": {
+                    "name": "cirros-0.3.4-x86_6:"
+                },
+                "block_migration": false
+            },
+            "runner": {
+                "type": "constant",
+                "times": 10,
+                "concurrency": 2
+            },
+            "context": {
+                "users": {
+                    "tenants": 1,
+                    "users_per_tenant": 1
+                }
+            }
+        }
+    ]
+}

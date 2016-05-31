@@ -1,0 +1,293 @@
+---
+  CinderVolumes.create_and_delete_snapshot:
+    -
+      args:
+          force: false
+      runner:
+        type: "constant"
+        times: 20
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        volumes:
+          size: 1
+
+  CinderVolumes.create_and_list_snapshots:
+    -
+      args:
+        force: True
+        detailed: True
+      runner:
+        type: "constant"
+        times: 20
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        volumes:
+          size: 1
+
+  CinderVolumes.create_and_attach_volume:
+    -
+      args:
+          size: 10
+          image:
+            name: "TestVM"
+          flavor:
+            name: "m1.tiny"
+      runner:
+        type: "constant"
+        times: 5
+        concurrency: 1
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  CinderVolumes.create_and_delete_volume:
+    -
+      args:
+        size: 1
+        volume_type: "rbd"
+      runner:
+        type: "constant"
+        times: 3
+        concurrency: 2
+      context:
+        users:
+          tenants: 2
+          users_per_tenant: 2
+
+  CinderVolumes.create_and_extend_volume:
+    -
+      args:
+        size: 5
+        new_size: 1
+      runner:
+        type: "constant"
+        times: 5
+        concurrency: 1
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+    -
+      args:
+        size: 1
+        new_size: 5
+      runner:
+        type: "constant"
+        times: 5
+        concurrency: 1
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  CinderVolumes.create_and_list_volume:
+    -
+      args:
+        size: 1
+        detailed: True
+      runner:
+        type: "constant"
+        times: 3
+        concurrency: 1
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  CinderVolumes.create_and_upload_volume_to_image:
+    -
+      args:
+        size: 1
+        force: false
+        container_format: "bare"
+        disk_format: "raw"
+        do_delete: true
+      runner:
+        type: "constant"
+        times: 5
+        concurrency: 1
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  CinderVolumes.create_and_upload_volume_to_image:
+    -
+      args:
+        size: 1
+        force: false
+        container_format: "bare"
+        disk_format: "raw"
+        do_delete: true
+      runner:
+        type: "constant"
+        times: 5
+        concurrency: 1
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  CinderVolumes.create_and_delete_volume:
+    -
+      args:
+        size: 1
+        volume_type: "rbd"
+        image:
+            name: "TestVM"
+      runner:
+        type: "constant"
+        times: 5
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  CinderVolumes.create_from_volume_and_delete_volume:
+    -
+      args:
+        size: 5
+      runner:
+        type: "constant"
+        times: 2
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        volumes:
+          size: 1
+
+    -
+      args:
+        size: 5
+      runner:
+        type: "constant"
+        times: 2
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        volumes:
+          size: 5
+
+    -
+      args:
+        size: 1
+      runner:
+        type: "constant"
+        times: 2
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        volumes:
+          size: 5
+
+  CinderVolumes.create_nested_snapshots_and_attach_volume:
+    -
+      args:
+          size:
+              min: 1
+              max: 5
+          nested_level:
+              min: 1
+              max: 1
+      runner:
+        type: "constant"
+        times: 1
+        concurrency: 1
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        servers:
+          image:
+            name: "TestVM"
+          flavor:
+            name: "m1.tiny"
+          servers_per_tenant: 1
+
+  CinderVolumes.create_snapshot_and_attach_volume:
+    -
+      args:
+          volume_type: false
+          size:
+              min: 1
+              max: 5
+      runner:
+        type: "constant"
+        times: 4
+        concurrency: 2
+      context:
+        users:
+          tenants: 2
+          users_per_tenant: 1
+        servers:
+          image:
+            name: "^cirros.*uec$"
+          flavor:
+            name: "m1.tiny"
+          servers_per_tenant: 2
+    -
+      args:
+          volume_type: true
+          size:
+              min: 1
+              max: 5
+      runner:
+        type: "constant"
+        times: 4
+        concurrency: 2
+      context:
+        users:
+          tenants: 2
+          users_per_tenant: 1
+        servers:
+          image:
+            name: "^cirros.*uec$"
+          flavor:
+            name: "m1.tiny"
+          servers_per_tenant: 2
+
+
+  CinderVolumes.create_volume:
+    -
+      args:
+        size: 1
+        volume_type: "rbd"
+      runner:
+        type: "constant"
+        times: 5
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+
+  CinderVolumes.list_volumes:
+    -
+      args:
+        detailed: True
+      runner:
+        type: "constant"
+        times: 50
+        concurrency: 2
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        volumes:
+          size: 1
+          volumes_per_tenant: 2

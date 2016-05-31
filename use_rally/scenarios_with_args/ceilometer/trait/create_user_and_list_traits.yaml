@@ -1,0 +1,8 @@
+---
+  CeilometerTraits.create_user_and_list_traits:
+    -
+      runner:
+        type: "constant"
+        times: 5
+        concurrency: 1
+

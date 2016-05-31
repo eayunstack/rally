@@ -1,0 +1,20 @@
+{% set image_name = image_name or "cirros-0.3.4-x86_64" %}
+---
+  NovaServers.boot_server:
+    -
+      {% for flavor_name in ( "m1.tiny", "m1.normal" ) %}
+      args:
+        flavor:
+            name: "{{flavor_name}}"
+        image:
+            name: "{{image_name}}"
+        auto_assign_nic: True
+      runner:
+        type: "constant"
+        times: 20
+        concurrency: 1
+      context:
+        users:
+            tenants: 1
+            users_per_tenant: 1
+      {% endfor %}
